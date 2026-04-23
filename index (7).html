@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VISUOGEN Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#07070d;--card:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.08);
+    --text:#e0e0f0;--muted:#666;--accent:#6366f1;--accent2:#a855f7;
+    --green:#22c55e;--yellow:#f59e0b;--red:#ef4444;
+  }
+  body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh}
+  ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:#2a2a3a;border-radius:2px}
+
+  /* NAV */
+  nav{position:sticky;top:0;z-index:100;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:rgba(7,7,13,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+  .logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
+  .logo-icon{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#6366f1,#a855f7);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff;box-shadow:0 0 20px rgba(99,102,241,0.4)}
+  .logo-text{font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:0.08em;color:#fff}
+  .logo-badge{font-size:10px;font-weight:700;color:#818cf8;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);padding:2px 9px;border-radius:100px;letter-spacing:0.1em}
+  .nav-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+
+  /* BUTTONS */
+  .btn{font-family:'Outfit',sans-serif;font-weight:600;cursor:pointer;border:none;border-radius:10px;transition:all 0.2s;font-size:14px}
+  .btn-primary{background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff;padding:11px 24px}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(99,102,241,0.5)}
+  .btn-primary:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+  .btn-ghost{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:#aaa;padding:9px 18px}
+  .btn-ghost:hover{background:rgba(255,255,255,0.09);color:#fff}
+  .btn-sm{padding:7px 14px;font-size:13px}
+  .btn-xs{padding:5px 12px;font-size:12px}
+  .btn-full{width:100%;padding:15px;font-size:16px;border-radius:12px}
+
+  /* CARDS */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px}
+  .card-p{padding:18px}
+
+  /* INPUTS */
+  input,textarea,select{font-family:'Outfit',sans-serif;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:10px;padding:11px 15px;color:var(--text);font-size:14px;outline:none;width:100%;transition:border-color 0.2s}
+  input:focus,textarea:focus{border-color:rgba(99,102,241,0.6);background:rgba(99,102,241,0.04)}
+  input::placeholder,textarea::placeholder{color:#444}
+  textarea{resize:none;line-height:1.6}
+  input[type=file]{display:none}
+  input[type=range]{padding:0;background:transparent;border:none}
+
+  /* LABELS */
+  .lbl{font-size:11px;font-weight:700;color:#555;letter-spacing:0.12em;text-transform:uppercase;display:block;margin-bottom:8px}
+
+  /* TOGGLE */
+  .toggle{width:44px;height:24px;border-radius:12px;background:#1a1a2a;border:1px solid #2a2a3a;cursor:pointer;position:relative;transition:all 0.3s;flex-shrink:0;display:inline-block}
+  .toggle.on{background:linear-gradient(135deg,#6366f1,#a855f7);border-color:#6366f1}
+  .toggle::after{content:'';width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:2px;left:3px;transition:all 0.3s;box-shadow:0 2px 6px rgba(0,0,0,0.4)}
+  .toggle.on::after{left:22px}
+
+  /* CHIPS */
+  .chip{padding:5px 13px;border-radius:100px;border:1px solid var(--border);background:transparent;color:#666;font-family:'Outfit',sans-serif;font-size:12px;cursor:pointer;transition:all 0.15s}
+  .chip:hover{border-color:rgba(99,102,241,0.4);color:#a5b4fc}
+  .chip.active{background:rgba(99,102,241,0.15);border-color:rgba(99,102,241,0.5);color:#a5b4fc}
+
+  /* PLATFORM CARDS */
+  .plat-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px;cursor:pointer;transition:all 0.2s}
+  .plat-card:hover{background:rgba(99,102,241,0.1);border-color:rgba(99,102,241,0.4);transform:translateY(-2px)}
+  .plat-card.selected{background:rgba(99,102,241,0.18);border-color:#6366f1;box-shadow:0 0 20px rgba(99,102,241,0.15)}
+
+  /* STEPS */
+  .steps{display:flex;background:rgba(255,255,255,0.02);border-radius:12px;padding:5px;border:1px solid var(--border);margin-bottom:24px}
+  .step-item{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:9px;border-radius:8px;cursor:default;transition:all 0.2s}
+  .step-item.active{background:rgba(99,102,241,0.15)}
+  .step-item.done{cursor:pointer}
+  .step-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:1px solid #222;background:#111;color:#444;transition:all 0.3s;flex-shrink:0}
+  .step-item.active .step-num{background:rgba(99,102,241,0.3);border-color:#6366f1;color:#fff}
+  .step-item.done .step-num{background:#6366f1;border-color:#6366f1;color:#fff}
+  .step-label{font-size:13px;font-weight:600;color:#444}
+  .step-item.active .step-label{color:#a5b4fc}
+  .step-item.done .step-label{color:#888}
+
+  /* LAYOUT */
+  .two-col{display:grid;grid-template-columns:250px 1fr;gap:16px;align-items:start}
+  .plat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;max-height:260px;overflow-y:auto;padding-right:4px}
+  .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+  .plan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+  .col-left{display:flex;flex-direction:column;gap:14px}
+  .col-right{display:flex;flex-direction:column;gap:14px}
+
+  /* ALERTS */
+  .alert{padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.6}
+  .alert-yellow{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);color:#fbbf24}
+  .alert-red{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);color:#f87171}
+  .alert-green{background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.25);color:#86efac}
+  .alert-blue{background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.25);color:#a5b4fc}
+
+  /* CREDIT BAR */
+  .credit-bar{width:160px;height:4px;border-radius:2px;background:#1a1a2a;overflow:hidden}
+  .credit-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#6366f1,#a855f7);transition:width 0.5s}
+  .credit-badge{display:flex;align-items:center;gap:7px;padding:5px 13px;border-radius:100px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);font-size:13px;font-weight:600;color:#a5b4fc}
+  .credit-dot{width:7px;height:7px;border-radius:50%;background:#6366f1;box-shadow:0 0 8px rgba(99,102,241,0.9)}
+
+  /* MODAL */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px}
+  .modal{max-width:500px;width:100%;padding:32px;max-height:90vh;overflow-y:auto}
+
+  /* RESULT */
+  .result-header{padding:13px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(99,102,241,0.04)}
+  .result-body{display:grid}
+  .result-sidebar{border-right:1px solid var(--border);padding:16px;display:flex;flex-direction:column;gap:12px}
+  .result-main{padding:22px}
+  .tag{display:inline-flex;align-items:center;padding:2px 9px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:0.06em}
+
+  /* HERO */
+  .hero{min-height:88vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 24px;position:relative;overflow:hidden}
+  .hero-bg1{position:absolute;inset:0;background:radial-gradient(ellipse 900px 500px at 50% 30%,rgba(99,102,241,0.09),transparent 70%);pointer-events:none}
+  .hero-bg2{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(99,102,241,0.07) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;opacity:0.4}
+  .hero-content{position:relative;z-index:1;max-width:800px}
+  .hero h1{font-family:'Bebas Neue',cursive;font-size:clamp(50px,10vw,96px);letter-spacing:0.02em;line-height:0.92;margin-bottom:24px}
+  .gradient-text{background:linear-gradient(135deg,#6366f1,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+  /* ANIMATIONS */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .fade-up{animation:fadeUp 0.35s ease forwards}
+  .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;vertical-align:middle}
+  .pulsing{animation:pulse 1.2s ease infinite}
+
+  /* DROP ZONE */
+  .drop-zone{border:2px dashed rgba(99,102,241,0.3);border-radius:20px;padding:52px 36px;text-align:center;transition:all 0.3s;cursor:pointer}
+  .drop-zone:hover,.drop-zone.drag-over{border-color:#6366f1;background:rgba(99,102,241,0.07)}
+
+  /* GENERATED IMAGE */
+  .gen-img{width:100%;border-radius:10px;object-fit:cover;display:block}
+
+  /* PAGES */
+  .page{display:none}.page.active{display:block}
+  .container{max-width:1200px;margin:0 auto;padding:28px 24px}
+  .container-sm{max-width:500px;margin:0 auto;padding:40px 24px}
+  .container-md{max-width:1000px;margin:0 auto;padding:60px 24px}
+
+  /* RESPONSIVE */
+  @media(max-width:768px){
+    .two-col{grid-template-columns:1fr}
+    .nav-right .btn-ghost{display:none}
+    .hero h1{font-size:clamp(40px,12vw,72px)}
+    .steps .step-label{display:none}
+    .result-body{grid-template-columns:1fr!important}
+    .result-sidebar{border-right:none;border-bottom:1px solid var(--border)}
+  }
+
+  /* MISC */
+  a{color:inherit;text-decoration:none}
+  .gap-8{gap:8px}.gap-12{gap:12px}.gap-16{gap:16px}
+  .flex{display:flex}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-between{justify-content:space-between}
+  .mb-8{margin-bottom:8px}.mb-12{margin-bottom:12px}.mb-16{margin-bottom:16px}.mb-24{margin-bottom:24px}
+  .mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}
+  .text-center{text-align:center}
+  .fw-700{font-weight:700}.fw-600{font-weight:600}
+  .fs-11{font-size:11px}.fs-12{font-size:12px}.fs-13{font-size:13px}.fs-14{font-size:14px}
+  .color-muted{color:#666}.color-accent{color:#a5b4fc}.color-green{color:#86efac}.color-yellow{color:#fbbf24}
+  .w-full{width:100%}
+  .hidden{display:none}
+  hr{border:none;border-top:1px solid var(--border);margin:20px 0}
+  .section-title{font-family:'Bebas Neue',cursive;font-size:38px;letter-spacing:0.05em;text-align:center;margin-bottom:10px}
+  .section-sub{text-align:center;color:#666;font-size:15px;margin-bottom:40px}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  NAVBAR                                      -->
+<!-- ═══════════════════════════════════════════ -->
+<nav>
+  <a class="logo" onclick="showPage('landing')">
+    <div class="logo-icon">V</div>
+    <span class="logo-text">VISUOGEN</span>
+    <span class="logo-badge">STUDIO</span>
+  </a>
+  <div class="nav-right" id="navRight">
+    <button class="btn btn-ghost btn-sm" onclick="showPage('pricing')">Pricing</button>
+    <div id="navLoggedOut" class="flex gap-8 items-center">
+      <button class="btn btn-ghost btn-sm" onclick="showAuth('login')">Sign In</button>
+      <button class="btn btn-primary btn-sm" onclick="showAuth('register')">Get Started Free</button>
+    </div>
+    <div id="navLoggedIn" class="flex gap-8 items-center hidden">
+      <button class="btn btn-ghost btn-sm" id="keyBtn" onclick="showModal('keyModal')">⚡ Setup Image Gen</button>
+      <div class="credit-badge"><div class="credit-dot"></div><span id="navCredits">0</span> credits</div>
+      <button class="btn btn-ghost btn-sm" id="dashBtn" onclick="showPage('dashboard')" style="display:none">Dashboard</button>
+      <span class="fs-13 color-muted" id="navName"></span>
+      <button class="btn btn-ghost btn-sm" onclick="logout()">Sign Out</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  PAGE: LANDING                              -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="page-landing" class="page active">
+  <div class="hero">
+    <div class="hero-bg1"></div>
+    <div class="hero-bg2"></div>
+    <div class="hero-content fade-up">
+      <div class="flex items-center gap-8 mb-24" style="justify-content:center">
+        <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:100px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);font-size:13px;color:#a5b4fc;font-weight:600">
+          ✦ AI-Powered Product Visual Studio
+        </div>
+      </div>
+      <h1>PROFESSIONAL<br/><span class="gradient-text">PRODUCT VISUALS</span><br/>IN SECONDS</h1>
+      <p style="font-size:17px;color:#888;line-height:1.7;margin-bottom:36px;max-width:540px;margin-left:auto;margin-right:auto">
+        Upload your product. Pick your platform. Get AI-generated images sized perfectly for every channel — your product's look is always preserved.
+      </p>
+      <div class="flex gap-12" style="justify-content:center;flex-wrap:wrap;margin-bottom:48px">
+        <button class="btn btn-primary" style="padding:16px 36px;font-size:16px" onclick="showAuth('register')">Start Free — 5 Generations →</button>
+        <button class="btn btn-ghost" style="padding:16px 28px;font-size:16px" onclick="showPage('pricing')">See Pricing</button>
+      </div>
+      <div class="flex flex-wrap gap-12" style="justify-content:center">
+        <span class="fs-13 color-muted">✦ 18+ Platform Formats</span>
+        <span class="fs-13 color-muted">✦ True-to-Size Accuracy</span>
+        <span class="fs-13 color-muted">✦ AI Model Support</span>
+        <span class="fs-13 color-muted">✦ Amazon Optimized</span>
+        <span class="fs-13 color-muted">✦ Real Image Generation</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:18px 24px;background:rgba(255,255,255,0.01)">
+    <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-around;flex-wrap:wrap;gap:14px">
+      <span class="fs-11 fw-700" style="color:#444;letter-spacing:0.1em;text-transform:uppercase">Optimized for</span>
+      <span class="fs-14 color-muted">📸 Instagram</span><span class="fs-14 color-muted">📱 TikTok</span>
+      <span class="fs-14 color-muted">📦 Amazon</span><span class="fs-14 color-muted">🎯 Meta Ads</span>
+      <span class="fs-14 color-muted">🌐 Websites</span><span class="fs-14 color-muted">📌 Pinterest</span>
+      <span class="fs-14 color-muted">📘 Facebook</span><span class="fs-14 color-muted">💼 LinkedIn</span>
+    </div>
+  </div>
+
+  <div style="max-width:1100px;margin:72px auto;padding:0 24px">
+    <div class="section-title">EVERYTHING YOU NEED</div>
+    <div class="section-sub">One studio. Every platform. Professional results.</div>
+    <div class="feat-grid">
+      <div class="card card-p"><div style="font-size:30px;margin-bottom:12px">🔬</div><div class="fw-700 mb-8" style="font-size:15px">Photorealistic Output</div><div class="fs-13 color-muted" style="line-height:1.6">DALL-E 3 generates stunning images that look like real commercial photography</div></div>
+      <div class="card card-p"><div style="font-size:30px;margin-bottom:12px">👤</div><div class="fw-700 mb-8" style="font-size:15px">AI Model Support</div><div class="fs-13 color-muted" style="line-height:1.6">Add AI people to lifestyle shots — diverse, on-brand, zero model fees</div></div>
+      <div class="card card-p"><div style="font-size:30px;margin-bottom:12px">📐</div><div class="fw-700 mb-8" style="font-size:15px">True-to-Size Accuracy</div><div class="fs-13 color-muted" style="line-height:1.6">Product proportions never distorted — looks exactly like real life</div></div>
+      <div class="card card-p"><div style="font-size:30px;margin-bottom:12px">📦</div><div class="fw-700 mb-8" style="font-size:15px">Amazon Optimized</div><div class="fs-13 color-muted" style="line-height:1.6">Main images, lifestyle, A+ content — all at correct Amazon specs</div></div>
+      <div class="card card-p"><div style="font-size:30px;margin-bottom:12px">🎬</div><div class="fw-700 mb-8" style="font-size:15px">Video & Reels</div><div class="fs-13 color-muted" style="line-height:1.6">Motion concepts and storyboards for TikTok, Instagram Reels, and more</div></div>
+      <div class="card card-p"><div style="font-size:30px;margin-bottom:12px">💰</div><div class="fw-700 mb-8" style="font-size:15px">Built to Monetize</div><div class="fs-13 color-muted" style="line-height:1.6">Charge others with built-in plans, credit system, and Stripe billing</div></div>
+    </div>
+  </div>
+
+  <div class="text-center" style="padding:40px 24px 80px;border-top:1px solid var(--border)">
+    <div class="section-title">READY TO START?</div>
+    <p class="color-muted mb-24">Free plan · 5 generations · No credit card needed</p>
+    <button class="btn btn-primary" style="padding:16px 40px;font-size:16px" onclick="showAuth('register')">Create Free Account →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  PAGE: AUTH                                 -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="page-auth" class="page">
+  <div class="container-sm">
+    <div class="card fade-up" style="padding:36px">
+      <div style="display:flex;gap:4px;background:rgba(255,255,255,0.04);border-radius:10px;padding:4px;margin-bottom:28px">
+        <button id="tabLogin" class="btn" style="flex:1;padding:9px;border-radius:8px;background:rgba(99,102,241,0.25);color:#a5b4fc;font-size:14px" onclick="switchTab('login')">Sign In</button>
+        <button id="tabRegister" class="btn" style="flex:1;padding:9px;border-radius:8px;background:transparent;color:#666;font-size:14px" onclick="switchTab('register')">Create Account</button>
+      </div>
+      <h2 id="authTitle" style="font-family:'Bebas Neue',cursive;font-size:28px;letter-spacing:0.05em;margin-bottom:6px">WELCOME BACK</h2>
+      <p id="authSub" class="color-muted fs-14 mb-24">Sign in to your studio</p>
+      <div id="nameField" class="mb-12 hidden"><input id="authName" placeholder="Full name"/></div>
+      <div class="mb-12"><input id="authEmail" type="email" placeholder="Email address"/></div>
+      <div class="mb-20"><input id="authPass" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')doAuth()"/></div>
+      <div id="authError" class="alert alert-red mb-16 hidden"></div>
+      <button class="btn btn-primary btn-full" onclick="doAuth()">Sign In →</button>
+      <div id="demoHint" class="mt-16" style="padding:12px;background:rgba(99,102,241,0.07);border-radius:8px;font-size:12px;color:#555;line-height:1.7">
+        <strong style="color:#818cf8">Demo accounts:</strong><br/>
+        Owner: owner@visuogen.com / owner123<br/>
+        Free user: demo@test.com / demo123
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  PAGE: PRICING                              -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="page-pricing" class="page">
+  <div class="container-md">
+    <div class="section-title">SIMPLE PRICING</div>
+    <div class="section-sub">Start free. Scale as you grow. Cancel anytime.</div>
+    <div class="plan-grid mb-24" id="planGrid"></div>
+    <div class="card card-p" style="background:rgba(245,158,11,0.04);border-color:rgba(245,158,11,0.2)">
+      <div class="fw-700 mb-8" style="font-size:16px;color:#fbbf24">💰 Your Revenue Model</div>
+      <p class="fs-14 color-muted" style="line-height:1.8;margin-bottom:16px">As the owner, you use Agency for free. Customers pay Starter ($19), Pro ($49), or Agency ($149). Connect <strong style="color:var(--text)">Stripe</strong> for payments. Use <strong style="color:var(--text)">OpenAI DALL-E</strong> for images (~$0.04/image). The difference is your profit.</p>
+      <div class="flex flex-wrap gap-8">
+        <a href="https://platform.openai.com" target="_blank" class="card card-p" style="padding:10px 16px"><div class="fw-700 fs-13">OpenAI</div><div class="fs-11 color-muted">platform.openai.com →</div></a>
+        <a href="https://stripe.com" target="_blank" class="card card-p" style="padding:10px 16px"><div class="fw-700 fs-13">Stripe</div><div class="fs-11 color-muted">stripe.com →</div></a>
+        <a href="https://vercel.com" target="_blank" class="card card-p" style="padding:10px 16px"><div class="fw-700 fs-13">Vercel</div><div class="fs-11 color-muted">vercel.com →</div></a>
+        <a href="https://github.com" target="_blank" class="card card-p" style="padding:10px 16px"><div class="fw-700 fs-13">GitHub</div><div class="fs-11 color-muted">github.com →</div></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  PAGE: APP                                  -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="page-app" class="page">
+  <div class="container">
+    <!-- Top bar -->
+    <div class="flex justify-between items-center mb-24" style="flex-wrap:wrap;gap:12px">
+      <div>
+        <h1 style="font-family:'Bebas Neue',cursive;font-size:30px;letter-spacing:0.05em;line-height:1">VISUAL STUDIO</h1>
+        <p class="color-muted fs-13" style="margin-top:3px">Generate professional product images for any platform</p>
+      </div>
+      <div style="text-align:right">
+        <div class="fs-12 color-muted mb-8">Plan: <span id="planLabel" style="font-weight:700;text-transform:capitalize"></span> · <span id="creditCount">0</span> credits</div>
+        <div class="credit-bar"><div class="credit-fill" id="creditFill" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <!-- Steps -->
+    <div class="steps">
+      <div class="step-item active" id="step1tab" onclick="if(appStep>1)goStep(1)">
+        <div class="step-num" id="s1num">1</div><span class="step-label">Upload Photo</span>
+      </div>
+      <div class="step-item" id="step2tab" onclick="if(appStep>2)goStep(2)">
+        <div class="step-num" id="s2num">2</div><span class="step-label">Configure</span>
+      </div>
+      <div class="step-item" id="step3tab">
+        <div class="step-num" id="s3num">3</div><span class="step-label">Results</span>
+      </div>
+    </div>
+
+    <!-- STEP 1: UPLOAD -->
+    <div id="appStep1" class="fade-up">
+      <div style="max-width:560px;margin:0 auto">
+        <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleDrop(event)">
+          <div style="font-size:50px;margin-bottom:14px">📸</div>
+          <h3 style="font-size:19px;font-weight:700;margin-bottom:6px">Upload your product photo</h3>
+          <p class="color-muted fs-14 mb-24">JPG, PNG, or WebP</p>
+          <div class="btn btn-primary" style="display:inline-block;padding:12px 30px;font-size:15px">📂 Choose File</div>
+          <input type="file" id="fileInput" accept="image/*" onchange="handleFileSelect(event)"/>
+          <div style="margin:14px 0;font-size:13px;color:#222">— or drag & drop —</div>
+          <div class="alert alert-green" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px">🛡️ Your product's look is never changed</div>
+        </div>
+        <div class="text-center mt-16">
+          <button class="btn btn-ghost btn-xs" onclick="useDemoImg()">No photo yet? Use demo product →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: CONFIGURE -->
+    <div id="appStep2" class="hidden">
+      <div class="two-col">
+        <!-- Left -->
+        <div class="col-left">
+          <div class="card card-p">
+            <div class="lbl">Your Product</div>
+            <div style="border-radius:10px;overflow:hidden;background:#0c0c14;aspect-ratio:1;display:flex;align-items:center;justify-content:center">
+              <img id="productPreview" src="" alt="" style="width:100%;height:100%;object-fit:contain;display:none"/>
+              <span id="noImgMsg" class="color-muted fs-13">No image</span>
+            </div>
+            <label style="display:block;margin-top:10px;cursor:pointer">
+              <div class="btn btn-ghost w-full" style="text-align:center;font-size:12px;padding:8px">Change Photo</div>
+              <input type="file" accept="image/*" onchange="handleFileSelect(event)"/>
+            </label>
+          </div>
+
+          <div class="card card-p">
+            <div class="flex justify-between items-center" style="margin-bottom:0" id="modelToggleRow">
+              <div><div class="fw-600 fs-13">AI Model (Person)</div><div class="fs-11 color-muted mt-8">Add a person to the scene</div></div>
+              <div class="toggle" id="modelToggle" onclick="toggleModel()"></div>
+            </div>
+            <div id="modelExtra" class="hidden mt-12">
+              <textarea id="modelTxt" rows="2" placeholder="e.g. 'young woman, casual wear'"></textarea>
+              <div id="modelUpgradeMsg" class="alert alert-yellow mt-8 hidden fs-12">⚡ Pro plan required — <span style="cursor:pointer;text-decoration:underline" onclick="showPage('pricing')">Upgrade</span></div>
+            </div>
+          </div>
+
+          <div class="card card-p">
+            <div class="lbl">Visual Style</div>
+            <div id="styleList"></div>
+          </div>
+        </div>
+
+        <!-- Right -->
+        <div class="col-right">
+          <div class="card card-p">
+            <div class="flex justify-between items-center mb-12">
+              <div class="lbl" style="margin-bottom:0">Platform & Canvas Size</div>
+              <div id="platSize" class="fs-12 color-accent fw-700 hidden"></div>
+            </div>
+            <div class="flex flex-wrap gap-8 mb-12" id="catBtns"></div>
+            <div class="plat-grid" id="platGrid"></div>
+          </div>
+
+          <div class="card card-p">
+            <div class="lbl">Scene & Creative Direction</div>
+            <div class="flex flex-wrap gap-8 mb-12" id="sceneChips"></div>
+            <textarea id="extraPrompt" rows="3" placeholder="Extra notes: 'dramatic shadows', 'premium feel', 'Amazon hero shot'..."></textarea>
+          </div>
+
+          <div id="noKeyBanner" class="alert alert-yellow flex justify-between items-center gap-12 hidden">
+            <span>⚡ No OpenAI key — add it to generate real images</span>
+            <button class="btn btn-primary btn-xs" onclick="showModal('keyModal')">Add Key</button>
+          </div>
+
+          <div id="genErrorBox" class="alert alert-red hidden"></div>
+
+          <div id="noCreditsBox" class="alert alert-yellow text-center hidden">
+            Out of credits — <span style="cursor:pointer;text-decoration:underline;font-weight:700" onclick="showPage('pricing')">Upgrade your plan</span>
+          </div>
+
+          <button class="btn btn-primary btn-full" id="genBtn" onclick="generate()" disabled>
+            Select a platform to continue
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: RESULTS -->
+    <div id="appStep3" class="hidden">
+      <div class="flex justify-between items-center mb-20" style="flex-wrap:wrap;gap:12px">
+        <div>
+          <h2 style="font-family:'Bebas Neue',cursive;font-size:28px;letter-spacing:0.05em">YOUR RESULTS</h2>
+          <p class="color-muted fs-13 mt-8" id="resultsSub"></p>
+        </div>
+        <div class="flex gap-8 flex-wrap">
+          <button class="btn btn-ghost btn-sm" onclick="goStep(2)">← Adjust</button>
+          <button class="btn btn-primary btn-sm" onclick="newFormat()">+ New Format</button>
+          <button class="btn btn-ghost btn-sm" onclick="resetApp()">New Product</button>
+        </div>
+      </div>
+      <div id="resultsList" style="display:flex;flex-direction:column;gap:16px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  PAGE: DASHBOARD                            -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="page-dashboard" class="page">
+  <div class="container">
+    <div class="flex justify-between items-center mb-24">
+      <div><h1 style="font-family:'Bebas Neue',cursive;font-size:36px;letter-spacing:0.05em">OWNER DASHBOARD</h1><p class="color-muted fs-13">Studio analytics & setup status</p></div>
+      <button class="btn btn-primary btn-sm" onclick="showPage('app')">Back to Studio</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px" id="dashStats"></div>
+    <div class="card card-p mb-16" id="noKeyDashAlert" style="display:none;background:rgba(239,68,68,0.05);border-color:rgba(239,68,68,0.2)">
+      <div class="fw-700 mb-8" style="color:#f87171">⚠️ Image Generation Not Active</div>
+      <p class="fs-14 color-muted mb-12">Add your OpenAI API key to start generating real images.</p>
+      <button class="btn btn-primary btn-sm" onclick="showModal('keyModal')">Setup OpenAI Key →</button>
+    </div>
+    <div class="card card-p mb-16">
+      <div class="fw-700 mb-16" style="font-size:15px">🚀 Launch Checklist</div>
+      <div id="checkList" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+    <div class="card card-p">
+      <div class="fw-700 mb-12" style="font-size:15px">Recent Generations (<span id="historyCount">0</span>)</div>
+      <div id="historyList" style="max-height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:6px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  MODAL: API KEY SETUP                       -->
+<!-- ═══════════════════════════════════════════ -->
+<div id="keyModal" class="modal-overlay hidden" onclick="if(event.target===this)hideModal('keyModal')">
+  <div class="card modal fade-up">
+    <h2 style="font-family:'Bebas Neue',cursive;font-size:26px;letter-spacing:0.05em;margin-bottom:6px">OPENAI API KEY SETUP</h2>
+    <p class="color-muted fs-14 mb-20" style="line-height:1.6">Add your OpenAI key to generate real images with DALL-E 3. Stored only in your browser — never shared.</p>
+    <div class="alert alert-blue mb-20">
+      <div class="lbl" style="color:#818cf8;margin-bottom:10px">HOW TO GET YOUR KEY (2 minutes)</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="flex gap-8 items-center"><div style="width:20px;height:20px;border-radius:50%;background:rgba(99,102,241,0.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#a5b4fc;flex-shrink:0">1</div><span class="fs-13" style="color:#999">Go to <a href="https://platform.openai.com" target="_blank" style="color:#818cf8;font-weight:600">platform.openai.com</a> and sign up free</span></div>
+        <div class="flex gap-8 items-center"><div style="width:20px;height:20px;border-radius:50%;background:rgba(99,102,241,0.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#a5b4fc;flex-shrink:0">2</div><span class="fs-13" style="color:#999">Click your profile → <a href="https://platform.openai.com/api-keys" target="_blank" style="color:#818cf8;font-weight:600">API Keys</a> → Create new key</span></div>
+        <div class="flex gap-8 items-center"><div style="width:20px;height:20px;border-radius:50%;background:rgba(99,102,241,0.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#a5b4fc;flex-shrink:0">3</div><span class="fs-13" style="color:#999">Copy the key (starts with sk-...) and paste below</span></div>
+      </div>
+    </div>
+    <div class="lbl">Your OpenAI API Key</div>
+    <input id="keyInput" type="password" placeholder="sk-..." style="margin-bottom:6px;font-family:monospace;font-size:13px"/>
+    <div class="fs-11 color-muted mb-20">🔒 Saved only to your browser's localStorage. Never transmitted to anyone.</div>
+    <div class="flex gap-8 flex-wrap">
+      <button class="btn btn-primary" onclick="saveKey()">Save Key</button>
+      <button class="btn btn-ghost" id="removeKeyBtn" onclick="removeKey()" style="display:none">Remove Key</button>
+      <button class="btn btn-ghost" style="margin-left:auto" onclick="hideModal('keyModal')">Cancel</button>
+    </div>
+    <div id="keySavedMsg" class="mt-12 fs-12 color-green fw-600 hidden">✓ Key saved — real image generation is active</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  JAVASCRIPT                                 -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+// ─── DATA ──────────────────────────────────────
+const PLANS = {
+  free:    {label:"Free",    price:0,   credits:5,   color:"#6b7280", features:["5 generations/mo","Social media formats","Watermarked output"]},
+  starter: {label:"Starter", price:19,  credits:100, color:"#3b82f6", features:["100 generations/mo","All platforms","HD output","No watermark"]},
+  pro:     {label:"Pro",     price:49,  credits:300, color:"#8b5cf6", features:["300 gen/mo","All platforms","4K output","AI Models","Priority"]},
+  agency:  {label:"Agency",  price:149, credits:9999,color:"#f59e0b", features:["Unlimited","White-label","API access","Team seats","Support"]},
+};
+
+const PLATFORMS = [
+  {id:"ig-post",   label:"Instagram Post",     cat:"Social",  icon:"📸", w:1080, h:1080, ratio:"1:1",    desc:"Square feed post"},
+  {id:"ig-story",  label:"IG Story / Reel",    cat:"Social",  icon:"📱", w:1080, h:1920, ratio:"9:16",   desc:"Stories & Reels", video:true},
+  {id:"tiktok",    label:"TikTok",             cat:"Social",  icon:"🎵", w:1080, h:1920, ratio:"9:16",   desc:"Vertical video",  video:true},
+  {id:"facebook",  label:"Facebook Post",      cat:"Social",  icon:"📘", w:1200, h:630,  ratio:"1.91:1", desc:"Feed post"},
+  {id:"twitter",   label:"X / Twitter",        cat:"Social",  icon:"🐦", w:1600, h:900,  ratio:"16:9",   desc:"Timeline image"},
+  {id:"pinterest", label:"Pinterest",          cat:"Social",  icon:"📌", w:1000, h:1500, ratio:"2:3",    desc:"Pin image"},
+  {id:"linkedin",  label:"LinkedIn",           cat:"Social",  icon:"💼", w:1200, h:627,  ratio:"1.91:1", desc:"Feed post"},
+  {id:"amz-main",  label:"Amazon Main",        cat:"Amazon",  icon:"📦", w:2000, h:2000, ratio:"1:1",    desc:"Pure white bg"},
+  {id:"amz-life",  label:"Amazon Lifestyle",   cat:"Amazon",  icon:"🏠", w:2000, h:2000, ratio:"1:1",    desc:"In-context scene"},
+  {id:"amz-info",  label:"Amazon Infographic", cat:"Amazon",  icon:"📊", w:2000, h:2000, ratio:"1:1",    desc:"Feature callouts"},
+  {id:"amz-aplus", label:"Amazon A+ Banner",   cat:"Amazon",  icon:"⭐", w:1464, h:600,  ratio:"2.44:1", desc:"A+ module"},
+  {id:"fb-ad",     label:"Meta / FB Ad",       cat:"Ads",     icon:"🎯", w:1200, h:628,  ratio:"1.91:1", desc:"Feed & stories"},
+  {id:"google",    label:"Google Display",     cat:"Ads",     icon:"📣", w:1200, h:628,  ratio:"1.91:1", desc:"Display network"},
+  {id:"banner",    label:"Leaderboard",        cat:"Ads",     icon:"🖼️", w:728,  h:90,   ratio:"8:1",    desc:"728x90 banner"},
+  {id:"hero",      label:"Website Hero",       cat:"Website", icon:"🌐", w:1920, h:1080, ratio:"16:9",   desc:"Full-width hero"},
+  {id:"prodcard",  label:"Product Card",       cat:"Website", icon:"🛒", w:800,  h:800,  ratio:"1:1",    desc:"E-commerce"},
+  {id:"og",        label:"OG / SEO Image",     cat:"Website", icon:"🔗", w:1200, h:630,  ratio:"1.91:1", desc:"Social share"},
+];
+
+const STYLES = [
+  {id:"realistic", label:"Ultra Realistic",  icon:"🔬", prompt:"ultra-realistic DSLR photography, photorealistic, natural lighting, commercial product photography quality"},
+  {id:"studio",    label:"Studio Shot",      icon:"💡", prompt:"professional studio photography, softbox lighting, clean seamless background, hero product shot"},
+  {id:"lifestyle", label:"Lifestyle",        icon:"☀️", prompt:"lifestyle photography, warm natural ambient light, editorial feel, in-context environment"},
+  {id:"minimal",   label:"Minimalist",       icon:"⬜", prompt:"minimalist product photography, pure white background, high-key lighting, clean and simple"},
+  {id:"luxury",    label:"Luxury/Editorial", icon:"✨", prompt:"luxury editorial photography, dramatic lighting, high fashion aesthetic, moody and premium"},
+  {id:"outdoor",   label:"Outdoor/Nature",   icon:"🌿", prompt:"outdoor natural setting, golden hour sunlight, organic textures, scenic nature background"},
+];
+
+const SCENES = ["Marble countertop","Rustic wooden table","Luxury hotel bathroom","Cozy living room","Modern minimalist desk","Outdoor garden","Beach/coastal","Urban city backdrop","Gym/fitness studio"];
+
+const MOCK_USERS = {
+  "owner@visuogen.com": {password:"owner123", plan:"agency", credits:9999, name:"Studio Owner", isOwner:true},
+  "demo@test.com":      {password:"demo123",  plan:"free",   credits:5,    name:"Demo User",    isOwner:false},
+};
+
+// ─── STATE ─────────────────────────────────────
+let currentUser = null;
+let userCredits = 0;
+let appStep = 1;
+let uploadedImgSrc = null;
+let uploadedImgB64 = null;
+let selectedPlatform = null;
+let selectedStyle = "realistic";
+let selectedScene = "";
+let modelOn = false;
+let catFilter = "All";
+let results = [];
+let history = JSON.parse(localStorage.getItem("vg_history")||"[]");
+let currentTab = "login";
+
+// ─── HELPERS ───────────────────────────────────
+const $ = id => document.getElementById(id);
+const show = id => $(id).classList.remove("hidden");
+const hide = id => $(id).classList.add("hidden");
+const getKey = () => { try{const v=localStorage.getItem("vg_openai_key");return v?JSON.parse(v):"";}catch{return "";} };
+
+function showPage(name) {
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  $("page-"+name).classList.add("active");
+  if(name==="app") renderApp();
+  if(name==="dashboard") renderDashboard();
+  if(name==="pricing") renderPricing();
+  window.scrollTo(0,0);
+}
+
+function showAuth(tab) {
+  showPage("auth");
+  switchTab(tab);
+}
+
+function showModal(id) {
+  $(id).classList.remove("hidden");
+  // pre-fill key if exists
+  if(id==="keyModal") {
+    const k = getKey();
+    $("keyInput").value = k ? "••••••••••••" : "";
+    if(k){show("removeKeyBtn");show("keySavedMsg");}
+    else{hide("removeKeyBtn");hide("keySavedMsg");}
+  }
+}
+
+function hideModal(id) { $(id).classList.add("hidden"); }
+
+// ─── AUTH ──────────────────────────────────────
+function switchTab(tab) {
+  currentTab = tab;
+  if(tab==="login"){
+    $("tabLogin").style.background="rgba(99,102,241,0.25)"; $("tabLogin").style.color="#a5b4fc";
+    $("tabRegister").style.background="transparent"; $("tabRegister").style.color="#666";
+    $("authTitle").textContent="WELCOME BACK"; $("authSub").textContent="Sign in to your studio";
+    hide("nameField"); $("authTitle").textContent="WELCOME BACK";
+    show("demoHint");
+  } else {
+    $("tabRegister").style.background="rgba(99,102,241,0.25)"; $("tabRegister").style.color="#a5b4fc";
+    $("tabLogin").style.background="transparent"; $("tabLogin").style.color="#666";
+    $("authTitle").textContent="JOIN VISUOGEN"; $("authSub").textContent="Start with 5 free generations";
+    show("nameField"); hide("demoHint");
+  }
+  hide("authError");
+}
+
+function doAuth() {
+  const email = $("authEmail").value.trim().toLowerCase();
+  const pass  = $("authPass").value;
+  const name  = $("authName").value.trim();
+
+  if(currentTab==="login") {
+    const u = MOCK_USERS[email];
+    if(!u || u.password!==pass) { showErr("authError","Invalid email or password"); return; }
+    setUser({email, name:u.name, plan:u.plan, isOwner:u.isOwner}, u.credits);
+  } else {
+    if(!name||!email||!pass) { showErr("authError","All fields are required"); return; }
+    setUser({email, name, plan:"free", isOwner:false}, 5);
+  }
+  showPage("app");
+}
+
+function setUser(u, credits) {
+  currentUser = u; userCredits = credits;
+  hide("navLoggedOut"); show("navLoggedIn");
+  $("navName").textContent = "Hi, "+u.name.split(" ")[0];
+  $("navCredits").textContent = credits;
+  if(u.isOwner) $("dashBtn").style.display="block";
+  updateKeyBtn();
+}
+
+function logout() {
+  currentUser=null; userCredits=0;
+  show("navLoggedOut"); hide("navLoggedIn");
+  $("dashBtn").style.display="none";
+  results=[]; appStep=1;
+  showPage("landing");
+}
+
+function showErr(id, msg) { $(id).textContent=msg; show(id); }
+function updateKeyBtn() {
+  const k = getKey();
+  $("keyBtn").textContent = k ? "⚙️ Key Active ✓" : "⚡ Setup Image Gen";
+  $("keyBtn").style.color = k ? "#86efac" : "#fbbf24";
+  $("keyBtn").style.borderColor = k ? "rgba(34,197,94,0.3)" : "rgba(245,158,11,0.3)";
+}
+
+// ─── KEY MANAGEMENT ────────────────────────────
+function saveKey() {
+  const val = $("keyInput").value.trim();
+  if(!val || val.startsWith("•")) { hideModal("keyModal"); return; }
+  localStorage.setItem("vg_openai_key", JSON.stringify(val));
+  show("keySavedMsg"); show("removeKeyBtn");
+  updateKeyBtn();
+  setTimeout(()=>hideModal("keyModal"), 800);
+}
+
+function removeKey() {
+  localStorage.removeItem("vg_openai_key");
+  $("keyInput").value=""; hide("keySavedMsg"); hide("removeKeyBtn");
+  updateKeyBtn();
+}
+
+// ─── IMAGE UPLOAD ──────────────────────────────
+function handleFileSelect(e) {
+  const file = e.target.files[0];
+  if(file) processFile(file);
+}
+function handleDrop(e) {
+  e.preventDefault();
+  $("dropZone").classList.remove("drag-over");
+  const file = e.dataTransfer.files[0];
+  if(file && file.type.startsWith("image/")) processFile(file);
+}
+function processFile(file) {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    uploadedImgSrc = ev.target.result;
+    uploadedImgB64 = ev.target.result.split(",")[1];
+    goStep(2);
+  };
+  reader.readAsDataURL(file);
+}
+function useDemoImg() {
+  uploadedImgSrc = "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80";
+  uploadedImgB64 = null;
+  goStep(2);
+}
+
+// ─── APP STEPS ─────────────────────────────────
+function goStep(n) {
+  appStep = n;
+  ["appStep1","appStep2","appStep3"].forEach((id,i)=>{
+    if(i+1===n) { show(id); $(id).classList.add("fade-up"); }
+    else hide(id);
+  });
+  // Update step tabs
+  for(let i=1;i<=3;i++){
+    const tab=$("step"+i+"tab"), num=$("s"+i+"num");
+    tab.classList.remove("active","done");
+    if(i===n) tab.classList.add("active");
+    if(i<n) { tab.classList.add("done"); num.textContent="✓"; }
+    if(i>=n) num.textContent=i;
+  }
+  if(n===2) setupStep2();
+  if(n===3) renderResults();
+}
+
+function renderApp() {
+  if(!currentUser) return;
+  updateCreditDisplay();
+  if(appStep===1) goStep(1);
+}
+
+function updateCreditDisplay() {
+  const plan = PLANS[currentUser?.plan||"free"];
+  $("planLabel").textContent = plan.label;
+  $("planLabel").style.color = plan.color;
+  $("creditCount").textContent = userCredits;
+  $("navCredits").textContent = userCredits;
+  const pct = Math.min(100,(userCredits/Math.max(plan.credits,1))*100);
+  $("creditFill").style.width = pct+"%";
+}
+
+function setupStep2() {
+  // Product preview
+  if(uploadedImgSrc) {
+    $("productPreview").src = uploadedImgSrc;
+    $("productPreview").style.display="block";
+    hide("noImgMsg");
+  }
+
+  // Styles
+  const sl = $("styleList"); sl.innerHTML="";
+  STYLES.forEach(s=>{
+    const d=document.createElement("div");
+    d.className="plat-card"; d.style.display="flex"; d.style.alignItems="center"; d.style.gap="10px"; d.style.marginBottom="6px";
+    if(s.id===selectedStyle) d.classList.add("selected");
+    d.innerHTML=`<span style="font-size:16px">${s.icon}</span><span style="font-size:13px;font-weight:600;color:${s.id===selectedStyle?"#a5b4fc":"#ccc"}">${s.label}</span>${s.id===selectedStyle?'<div style="margin-left:auto;width:6px;height:6px;border-radius:50%;background:#6366f1"></div>':''}`;
+    d.onclick=()=>{ selectedStyle=s.id; setupStep2(); };
+    sl.appendChild(d);
+  });
+
+  // Category buttons
+  const cb=$("catBtns"); cb.innerHTML="";
+  ["All","Social","Amazon","Ads","Website"].forEach(c=>{
+    const b=document.createElement("button");
+    b.className="chip"+(catFilter===c?" active":""); b.textContent=c;
+    b.onclick=()=>{ catFilter=c; setupStep2(); };
+    cb.appendChild(b);
+  });
+
+  // Platform grid
+  const pg=$("platGrid"); pg.innerHTML="";
+  const filtered = catFilter==="All" ? PLATFORMS : PLATFORMS.filter(p=>p.cat===catFilter);
+  filtered.forEach(p=>{
+    const d=document.createElement("div");
+    d.className="plat-card"+(selectedPlatform===p.id?" selected":"");
+    d.innerHTML=`<div style="font-size:18px;margin-bottom:5px">${p.icon}</div><div style="font-size:12px;font-weight:700;color:${selectedPlatform===p.id?"#a5b4fc":"#ddd"};margin-bottom:2px">${p.label}</div><div style="font-size:10px;color:#555;margin-bottom:3px">${p.desc}</div><div style="font-size:10px;color:#333;font-family:monospace">${p.w}×${p.h}</div>${p.video?'<div style="font-size:9px;font-weight:700;color:#6366f1;margin-top:3px;letter-spacing:0.1em">VIDEO</div>':''}`;
+    d.onclick=()=>{ selectedPlatform=p.id; setupStep2(); };
+    pg.appendChild(d);
+  });
+
+  // Platform size indicator
+  if(selectedPlatform) {
+    const p=PLATFORMS.find(x=>x.id===selectedPlatform);
+    $("platSize").textContent=`✓ ${p.w}×${p.h}px`; show("platSize");
+  } else hide("platSize");
+
+  // Scene chips
+  const sc=$("sceneChips"); sc.innerHTML="";
+  SCENES.forEach(s=>{
+    const b=document.createElement("button");
+    b.className="chip"+(selectedScene===s?" active":""); b.textContent=s;
+    b.onclick=()=>{ selectedScene=selectedScene===s?"":s; setupStep2(); };
+    sc.appendChild(b);
+  });
+
+  // Model toggle
+  $("modelToggle").className="toggle"+(modelOn?" on":"");
+  if(modelOn) show("modelExtra"); else hide("modelExtra");
+  if(modelOn && currentUser?.plan==="free") show("modelUpgradeMsg"); else hide("modelUpgradeMsg");
+
+  // Banners
+  const k=getKey();
+  if(!k) show("noKeyBanner"); else hide("noKeyBanner");
+  if(userCredits<1) show("noCreditsBox"); else hide("noCreditsBox");
+
+  // Generate button
+  const genBtn=$("genBtn");
+  if(selectedPlatform && userCredits>0) {
+    genBtn.disabled=false;
+    const p=PLATFORMS.find(x=>x.id===selectedPlatform);
+    genBtn.textContent=`✦ Generate for ${p.label}`;
+  } else {
+    genBtn.disabled=true;
+    genBtn.textContent=selectedPlatform?"Out of credits":"Select a platform to continue";
+  }
+}
+
+function toggleModel() { modelOn=!modelOn; setupStep2(); }
+
+// ─── GENERATE ──────────────────────────────────
+async function generate() {
+  if(!selectedPlatform || userCredits<1) return;
+
+  const plat = PLATFORMS.find(p=>p.id===selectedPlatform);
+  const sty  = STYLES.find(s=>s.id===selectedStyle);
+  const scene = selectedScene || "professional studio";
+  const extra = $("extraPrompt").value;
+  const modelTxt = $("modelTxt")?.value||"";
+  const modelPart = modelOn && modelTxt ? `, featuring a ${modelTxt} holding/using the product` : "";
+  const waterPart = currentUser.plan==="free" ? ". Add a small subtle 'VisuoGen' watermark in the bottom corner." : "";
+
+  const imagePrompt = `${sty.prompt}. Product: ${extra||"this product"}. Scene: ${scene}${modelPart}. Optimized for ${plat.label} at ${plat.ratio} aspect ratio. IMPORTANT: preserve the product's exact appearance, colors, shape, and design. Do not alter or stylize the product itself. True-to-size realistic proportions. Commercial grade photography${waterPart}`;
+
+  // UI loading state
+  const genBtn=$("genBtn");
+  genBtn.disabled=true;
+  genBtn.innerHTML='<span class="spinner"></span> <span class="pulsing">Generating...</span>';
+  hide("genErrorBox");
+
+  const openaiKey = getKey();
+  let imageUrl = null;
+  let guidance = "";
+
+  try {
+    // ── REAL IMAGE: OpenAI DALL-E 3 ──────────────
+    if(openaiKey) {
+      genBtn.innerHTML='<span class="spinner"></span> <span class="pulsing">🎨 Generating image with DALL-E 3...</span>';
+      try {
+        const dalleSize = plat.w===plat.h ? "1024x1024" : plat.w>plat.h ? "1792x1024" : "1024x1792";
+        const res = await fetch("https://api.openai.com/v1/images/generations", {
+          method:"POST",
+          headers:{"Authorization":"Bearer "+openaiKey,"Content-Type":"application/json"},
+          body: JSON.stringify({
+            model: "dall-e-3",
+            prompt: imagePrompt,
+            n: 1,
+            size: dalleSize,
+            quality: currentUser.plan==="free" ? "standard" : "hd",
+            response_format: "url"
+          })
+        });
+        const data = await res.json();
+        if(data.error) throw new Error(data.error.message);
+        imageUrl = data?.data?.[0]?.url || null;
+      } catch(imgErr) {
+        $("genErrorBox").textContent = "Image error: "+imgErr.message;
+        show("genErrorBox");
+      }
+    }
+
+    // ── AI VISUAL DIRECTION: Claude ───────────────
+    genBtn.innerHTML='<span class="spinner"></span> <span class="pulsing">✦ Writing AI direction...</span>';
+    const msgContent = uploadedImgB64 ? [
+      {type:"image", source:{type:"base64", media_type:"image/jpeg", data:uploadedImgB64}},
+      {type:"text", text:`You are a professional product photographer and creative director. Analyze this product image and write detailed visual direction for a ${plat.label} photo (${plat.w}x${plat.h}px, ${plat.ratio} ratio).\n\nStyle: ${sty.label}. Scene: ${scene}.${modelOn?` Include a ${modelTxt||"professional"} model.`:""}\nNotes: ${extra||"none"}.\n\nWrite 5 short sections (2-3 sentences each):\n**Scene Setup:**\n**Lighting:**\n**Composition:**\n**Post-Processing:**\n**Platform Tips for ${plat.label}:**\n\nBe specific and actionable. Never suggest changing the product's colors, shape, or design.`}
+    ] : [{type:"text", text:`Write detailed visual direction for a ${plat.label} product photo (${plat.w}x${plat.h}px, ${sty.label} style, ${scene} scene). 5 sections: Scene Setup, Lighting, Composition, Post-Processing, Platform Tips. Be specific and actionable.`}];
+
+    const cRes = await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514", max_tokens:1000, messages:[{role:"user",content:msgContent}]})
+    });
+    const cData = await cRes.json();
+    guidance = cData.content?.map(c=>c.text||"").join("\n") || "Could not load visual direction.";
+
+    // Save result
+    const result = {id:Date.now(), plat, sty, scene, extra, imageUrl, imagePrompt, guidance, ts:new Date().toLocaleString(), plan:currentUser.plan};
+    results.unshift(result);
+    history.unshift(result);
+    localStorage.setItem("vg_history", JSON.stringify(history.slice(0,50)));
+    userCredits = Math.max(0, userCredits-1);
+    updateCreditDisplay();
+    goStep(3);
+
+  } catch(err) {
+    $("genErrorBox").textContent = "Error: "+(err.message||"Unknown error");
+    show("genErrorBox");
+    genBtn.disabled=false; genBtn.textContent=`✦ Generate for ${plat.label}`;
+  }
+}
+
+// ─── RESULTS ───────────────────────────────────
+function renderResults() {
+  $("resultsSub").textContent = results.length+" result"+(results.length!==1?"s":"")+" · "+userCredits+" credits remaining";
+  const list=$("resultsList"); list.innerHTML="";
+  results.forEach(r=>{
+    const hasSidebar = !!uploadedImgSrc;
+    const div=document.createElement("div");
+    div.className="card"; div.style.overflow="hidden";
+    div.innerHTML=`
+      <div class="result-header">
+        <div class="flex items-center gap-12">
+          <span style="font-size:22px">${r.plat.icon}</span>
+          <div>
+            <div class="fw-700" style="font-size:15px">${r.plat.label}</div>
+            <div class="fs-11 color-muted">${r.plat.w}×${r.plat.h}px · ${r.plat.ratio} · ${r.sty.label}</div>
+          </div>
+          ${r.plat.video?'<span class="tag" style="background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.4);color:#a5b4fc">🎬 VIDEO</span>':''}
+          ${r.imageUrl?'<span class="tag" style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:#86efac">✓ IMAGE</span>':''}
+        </div>
+        <div class="flex items-center gap-8">
+          <span class="fs-11 color-muted">${r.ts}</span>
+          <button class="btn btn-ghost btn-xs" onclick="navigator.clipboard&&navigator.clipboard.writeText(${JSON.stringify(r.imagePrompt).replace(/"/g,'&quot;')})">Copy Prompt</button>
+        </div>
+      </div>
+      <div class="result-body" style="grid-template-columns:${hasSidebar?"200px 1fr":"1fr"}">
+        ${hasSidebar?`
+        <div class="result-sidebar">
+          <div class="lbl">Source</div>
+          <img src="${uploadedImgSrc}" style="width:100%;border-radius:8px;object-fit:contain;background:#0c0c14;max-height:160px"/>
+          ${r.imageUrl?`
+            <div class="lbl">Generated</div>
+            <img src="${r.imageUrl}" class="gen-img"/>
+            <a href="${r.imageUrl}" download="visuogen.png" class="btn btn-ghost btn-xs w-full text-center" style="margin-top:4px">⬇ Download</a>
+          `:`
+            <div class="alert alert-yellow fs-12">
+              Add OpenAI key for real images
+              <button class="btn btn-primary btn-xs w-full mt-8" onclick="showModal('keyModal')">Setup Now</button>
+            </div>
+          `}
+        </div>`:``}
+        <div class="result-main">
+          <div class="lbl">AI Visual Direction</div>
+          <div style="font-size:14px;line-height:1.85;color:#bbbbd0;white-space:pre-wrap">${r.guidance}</div>
+          <div class="alert alert-blue mt-16 flex flex-wrap gap-16 fs-12">
+            <span><span class="color-muted">Size: </span><span class="color-accent fw-600">${r.plat.w}×${r.plat.h}px</span></span>
+            <span><span class="color-muted">Ratio: </span><span class="color-accent fw-600">${r.plat.ratio}</span></span>
+            <span><span class="color-muted">Platform: </span><span class="color-accent fw-600">${r.plat.cat}</span></span>
+            <span class="color-green">✓ Appearance preserved</span>
+          </div>
+        </div>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function newFormat() { selectedPlatform=null; goStep(2); }
+function resetApp()  { appStep=1; uploadedImgSrc=null; uploadedImgB64=null; selectedPlatform=null; results=[]; goStep(1); }
+
+// ─── PRICING ───────────────────────────────────
+function renderPricing() {
+  const grid=$("planGrid"); if(!grid) return;
+  grid.innerHTML="";
+  Object.entries(PLANS).forEach(([key,plan])=>{
+    const featured=key==="pro";
+    const d=document.createElement("div");
+    d.className="card"; d.style.padding="24px"; d.style.transition="all 0.2s"; d.style.cursor="pointer";
+    if(featured){d.style.border="1px solid rgba(139,92,246,0.5)";d.style.background="rgba(139,92,246,0.07)";}
+    d.innerHTML=`
+      ${featured?'<div style="margin-bottom:10px;font-size:10px;font-weight:700;color:#c4b5fd;background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);display:inline-block;padding:2px 10px;border-radius:100px;letter-spacing:0.08em">⭐ MOST POPULAR</div>':''}
+      <div style="font-size:11px;font-weight:700;color:${plan.color};letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">${plan.label}</div>
+      <div style="margin-bottom:14px"><span style="font-family:'Bebas Neue',cursive;font-size:40px">$${plan.price}</span>${plan.price>0?'<span class="color-muted fs-14">/mo</span>':''}</div>
+      <div style="font-size:13px;color:#7c3aed;font-weight:600;margin-bottom:12px">${plan.credits===9999?"Unlimited":plan.credits} credits/mo</div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px">${plan.features.map(f=>`<div class="fs-13 color-muted flex items-center gap-8"><span style="color:${plan.color}">✓</span>${f}</div>`).join("")}</div>
+      <button class="btn btn-primary w-full" style="background:linear-gradient(135deg,${plan.color},${plan.color}bb)" onclick="handlePlanClick('${key}')">
+        ${plan.price===0?"Start Free →":"Subscribe →"}
+      </button>`;
+    grid.appendChild(d);
+  });
+}
+
+function handlePlanClick(key) {
+  if(!currentUser){showAuth("register");return;}
+  const plan=PLANS[key];
+  if(plan.price===0){showPage("app");return;}
+  alert(`To activate ${plan.label} at $${plan.price}/mo:\n\n1. Add your Stripe key to the code\n2. Create a Stripe payment link for this plan\n3. Redirect users here\n\nThis is the last step to make your business live!`);
+}
+
+// ─── DASHBOARD ─────────────────────────────────
+function renderDashboard() {
+  if(!currentUser?.isOwner) return;
+  const k=getKey();
+  const topPlat = Object.entries(history.reduce((a,r)=>{if(r.plat?.label)a[r.plat.label]=(a[r.plat.label]||0)+1;return a;},{})).sort((a,b)=>b[1]-a[1])[0];
+
+  $("dashStats").innerHTML=[
+    {l:"Total Generations",v:history.length,c:"#6366f1"},
+    {l:"Top Platform",v:topPlat?.[0]||"—",c:"#a855f7"},
+    {l:"Your Plan",v:"Agency (Free)",c:"#f59e0b"},
+    {l:"Image Gen",v:k?"✓ Active":"Not set",c:k?"#22c55e":"#ef4444"},
+  ].map(s=>`<div class="card card-p"><div class="lbl">${s.l}</div><div style="font-family:'Bebas Neue',cursive;font-size:34px;color:${s.c};line-height:1">${s.v}</div></div>`).join("");
+
+  $("noKeyDashAlert").style.display = k ? "none" : "block";
+
+  $("checkList").innerHTML=[
+    {done:!!k,       t:"OpenAI API key added",    sub:"Enables real DALL-E image generation", link:"https://platform.openai.com/api-keys", cta:"Get key"},
+    {done:false,     t:"Stripe payments connected",sub:"Lets you charge customers",            link:"https://stripe.com",                  cta:"Setup"},
+    {done:false,     t:"Deploy to Vercel",         sub:"Makes the app live on the internet",   link:"https://vercel.com",                  cta:"Deploy"},
+    {done:false,     t:"Connect custom domain",    sub:"e.g. yourapp.com (~$12/yr)",           link:"https://namecheap.com",               cta:"Buy domain"},
+  ].map(item=>`
+    <div class="flex items-center gap-12" style="padding:11px 14px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05)">
+      <div style="width:20px;height:20px;border-radius:50%;border:2px solid ${item.done?"#22c55e":"#2a2a3a"};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        ${item.done?'<div style="width:10px;height:10px;border-radius:50%;background:#22c55e"></div>':''}
+      </div>
+      <div style="flex:1">
+        <div class="fs-13 fw-600" style="color:${item.done?"#86efac":"#ccc"}">${item.t}</div>
+        <div class="fs-11 color-muted">${item.sub}</div>
+      </div>
+      <a href="${item.link}" target="_blank" class="btn btn-ghost btn-xs" style="color:#6366f1;border-color:rgba(99,102,241,0.3);white-space:nowrap">${item.cta} →</a>
+    </div>`).join("");
+
+  $("historyCount").textContent = history.length;
+  $("historyList").innerHTML = history.length===0
+    ? '<div class="text-center color-muted fs-14" style="padding:28px">No generations yet. Go create something!</div>'
+    : history.slice(0,25).map(r=>`
+      <div class="flex items-center gap-12" style="padding:10px 14px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04)">
+        <span style="font-size:18px">${r.plat?.icon||"📸"}</span>
+        <div style="flex:1"><div class="fs-13 fw-600" style="color:#ccc">${r.plat?.label}</div><div class="fs-11 color-muted">${r.plat?.w}×${r.plat?.h}px · ${r.sty?.label}</div></div>
+        ${r.imageUrl?'<span class="fs-10 fw-700 color-green">✓ IMAGE</span>':''}
+        <span class="fs-11" style="color:#333">${r.ts}</span>
+      </div>`).join("");
+}
+
+// ─── INIT ──────────────────────────────────────
+updateKeyBtn();
+renderPricing();
+</script>
+</body>
+</html>
