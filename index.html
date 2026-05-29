@@ -295,7 +295,7 @@ a{color:inherit;text-decoration:none}
     <!-- STEP 1: UPLOAD -->
     <div id="s1" class="fu">
       <div style="max-width:540px;margin:0 auto">
-        <div class="drop-zone" id="dz" onclick="document.getElementById('fi').click()" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="onDrop(event)">
+        <div class="drop-zone" id="dz" onclick="var fi=document.getElementById('fi');if(fi)fi.click()" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="onDrop(event)">
           <div style="font-size:46px;margin-bottom:12px">📸</div>
           <h3 style="font-size:18px;font-weight:700;margin-bottom:6px">Upload your photo or product</h3>
           <p style="color:var(--muted);font-size:13px;margin-bottom:20px">JPG, PNG, WebP — drag & drop or click to browse</p>
@@ -930,7 +930,7 @@ async function doGen(){
   ].filter(Boolean).join(" ");
 
   // DALL-E only supports 3 sizes
-  const dalleSize=plat.w===plat.h?"1024x1024":plat.w>plat.h?"1792x1024":"1024x1792";
+  const dalleSize="1024x1024"; // dall-e-2 only supports 1024x1024
 
   // Loading UI
   const btn=$("genBtn");
@@ -953,11 +953,10 @@ async function doGen(){
             "Authorization":"Bearer "+openaiKey,
           },
           body:JSON.stringify({
-            model:"dall-e-3",
+            model:"dall-e-2",
             prompt:fullPrompt,
             n:1,
             size:dalleSize,
-            quality:quality,
           }),
         });
         const imgData=await imgRes.json();
