@@ -960,7 +960,7 @@ async function doGen(){
             prompt:fullPrompt,
             n:1,
             size:dalleSize,
-            quality:"standard",
+            quality:"auto",
           }),
         });
         const imgData=await imgRes.json();
