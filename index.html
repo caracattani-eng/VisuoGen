@@ -315,8 +315,8 @@ a{color:inherit;text-decoration:none}
             <div class="sc" onclick="pickCT(this,'ad')"><div style="font-size:20px;margin-bottom:5px">🎯</div><div style="font-size:12px;font-weight:700">Ad Creative</div><div style="font-size:10px;color:var(--muted)">High-converting ads</div></div>
           </div>
         </div>
-        <div style="text-align:center;margin-top:16px">
-          <button class="btn btn-p" style="padding:12px 36px;font-size:15px" onclick="if(imgSrc)gS(2);else alert('Please upload a photo first')">Continue →</button>
+        <div id="continueRow" style="text-align:center;margin-top:16px;display:none">
+          <button class="btn btn-p" style="padding:12px 36px;font-size:15px" onclick="gS(2)">Continue →</button>
         </div>
       </div>
     </div>
@@ -723,12 +723,38 @@ function onDrop(e){
 }
 function readFile(f){
   const r=new FileReader();
-  r.onload=ev=>{ imgSrc=ev.target.result; imgB64=ev.target.result.split(",")[1]; };
+  r.onload=ev=>{
+    imgSrc=ev.target.result;
+    imgB64=ev.target.result.split(",")[1];
+    showUploadPreview(imgSrc, f.name);
+  };
   r.readAsDataURL(f);
 }
 function useDemo(){
   imgSrc="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=600&q=80";
   imgB64=null;
+  showUploadPreview(imgSrc, "demo-product.jpg");
+}
+function showUploadPreview(src, name){
+  const dz=$("dz");
+  dz.innerHTML=`
+    <div style="display:flex;flex-direction:column;align-items:center;gap:16px">
+      <div style="position:relative;width:180px;height:180px;border-radius:14px;overflow:hidden;border:2px solid var(--green);box-shadow:0 0 24px rgba(61,255,160,0.2)">
+        <img src="${src}" style="width:100%;height:100%;object-fit:contain;background:#0c0c18"/>
+        <div style="position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:13px">✓</div>
+      </div>
+      <div>
+        <div style="font-size:15px;font-weight:700;color:var(--green);margin-bottom:4px">✓ Photo uploaded!</div>
+        <div style="font-size:12px;color:var(--muted)">${name}</div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <label style="cursor:pointer">
+          <div class="btn btn-g btn-sm">Change Photo</div>
+          <input type="file" accept="image/*" onchange="onFile(event)"/>
+        </label>
+        <button class="btn btn-p btn-sm" onclick="gS(2)">Continue →</button>
+      </div>
+    </div>`;
 }
 function pickCT(el,ct){
   ctType=ct;
@@ -947,27 +973,11 @@ async function doGen(){
       }
     }
 
-    // ── CREATIVE BRIEF: Claude via Cloudflare Worker ──
+    // ── CREATIVE BRIEF: Generated locally — no extra API needed ──
     btn.innerHTML='<span class="spinner"></span> <span class="pulsing">✦ Writing creative brief...</span>';
-    const claudeBody={
-      model:"claude-sonnet-4-20250514",
-      max_tokens:1200,
-      messages:[{
-        role:"user",
-        content: imgB64 ? [
-          {type:"image",source:{type:"base64",media_type:"image/jpeg",data:imgB64}},
-          {type:"text",text:`You are a world-class creative director. Analyze this product and write a professional creative brief for a ${plat.label} ${ctLabel} (${plat.w}×${plat.h}px, ${plat.ratio}).\n\nStyle: ${sty.label} | Lighting: ${light} | Camera: ${angle} | Background: ${bg} | Tone: ${tone}\n${modelOn?`Model: ${gender}, ${clothing}. ${modelExtra}`:"No model."}\n${videoOn?`Video: ${videoType}`:"Static image."}\nUser vision: ${userPrompt||"none"}\n\nWrite a creative brief with these exact sections:\n**Visual Concept:** (2-3 sentences — the overall vision)\n**Lighting Setup:** (specific and technical)\n**Composition & Framing:** (exact placement)\n**Color & Mood:** (tone and atmosphere)\n**Platform Tips:** (specific to ${plat.label} ${plat.w}×${plat.h}px)\n${videoOn?`**Video Storyboard:** (3-5 shot breakdown for ${videoType})\n`:""}\n**Why This Will Convert:** (marketing psychology)\n\nBe specific, visual, and actionable. Never suggest altering the product's actual appearance.`}
-        ] : [{type:"text",text:`Write a professional creative brief for a ${plat.label} ${ctLabel} (${plat.w}×${plat.h}px, ${sty.label}, ${bg}, ${light}). Sections: Visual Concept, Lighting, Composition, Color & Mood, Platform Tips, Why This Will Convert. Be specific and actionable.`}]
-      }]
-    };
-
-    const cRes=await fetch(WORKER+"/anthropic",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(claudeBody),
-    });
-    const cData=await cRes.json();
-    guidance=cData.content?.map(c=>c.text||"").join("\n")||"Creative brief unavailable.";
+    const modelNote = modelOn ? `\n\n**Model Direction:**\nFeature a ${gender} dressed in ${clothing}. ${modelExtra ? modelExtra : "Position them naturally using the product with a genuine, unposed expression."}` : "";
+    const videoNote2 = videoOn ? `\n\n**Video Storyboard (${videoType}):**\n• Shot 1 (0-2s): Hook — close-up of product or model reaction\n• Shot 2 (2-5s): Product in use — show the benefit clearly\n• Shot 3 (5-10s): Lifestyle context — wider shot of the full scene\n• Shot 4 (10-15s): Call to action — product hero with key message\nKeep cuts fast. Add captions for silent viewing.` : "";
+    guidance = `**Visual Concept:**\n${userPrompt || `A ${sty.label.toLowerCase()} ${ctLabel} for ${plat.label}. The product is the clear hero, presented in a ${bg} setting that feels aspirational yet authentic.`} Overall mood: ${tone}.\n\n**Lighting Setup:**\n${light.charAt(0).toUpperCase()+light.slice(1)}. Position key light at 45° to the product for depth. Use a fill light or reflector on the opposite side to lift shadows without flattening the image. Avoid harsh direct light — diffused sources feel more premium.\n\n**Composition & Framing:**\n${angle.charAt(0).toUpperCase()+angle.slice(1)}. Place the product on the rule-of-thirds intersection. Leave ${plat.w > plat.h ? "left or right" : "top or bottom"} space for text if needed. Keep the main subject within the central 80% of the ${plat.w}×${plat.h}px canvas.\n\n**Color & Mood:**\n${tone.charAt(0).toUpperCase()+tone.slice(1)} treatment. The ${bg} background should complement the product without competing. Reproduce the product's actual colors accurately — do not shift hues. Aim for a cohesive, intentional palette throughout.\n\n**Platform Tips for ${plat.label} (${plat.w}×${plat.h}px):**\n• Exact canvas: ${plat.w}×${plat.h}px at ${plat.ratio} ratio\n• Keep key elements within safe zone (inner 90% of frame)\n• ${plat.cat === "Amazon" ? "White/neutral bg required for main image. Product must fill 85%+ of frame. No logos, text or watermarks on main image." : plat.cat === "Ads" ? "Lead with product benefit visually. Strong visual hierarchy: product → benefit → brand." : "First frame must stop the scroll. Lead with your strongest visual element."}${modelNote}${videoNote2}\n\n**Why This Will Convert:**\n${ctType === "ugc" ? "UGC-style content consistently outperforms polished ads — it triggers social proof. Viewers see a real person choosing this product which builds instant trust." : ctType === "ad" ? "High-contrast composition draws the eye immediately, reducing scroll-past rate. Clear visual hierarchy guides the viewer from product to benefit to action." : ctType === "lifestyle" ? "Lifestyle context helps the customer mentally place themselves using the product — they buy the feeling, not just the item." : "Clean product-forward imagery builds brand trust and makes the purchase decision easier by eliminating visual distractions."}`
 
     // Save result
     const result={
