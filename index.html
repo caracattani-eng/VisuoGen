@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>PIXORA — AI Visual Studio</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
@@ -930,7 +933,7 @@ async function doGen(){
   ].filter(Boolean).join(" ");
 
   // DALL-E only supports 3 sizes
-  const dalleSize="1024x1024"; // dall-e-2 only supports 1024x1024
+  const dalleSize=plat.w===plat.h?"1024x1024":plat.w>plat.h?"1792x1024":"1024x1792";
 
   // Loading UI
   const btn=$("genBtn");
@@ -953,10 +956,11 @@ async function doGen(){
             "Authorization":"Bearer "+openaiKey,
           },
           body:JSON.stringify({
-            model:"dall-e-2",
+            model:"dall-e-3",
             prompt:fullPrompt,
             n:1,
             size:dalleSize,
+            quality:"standard",
           }),
         });
         const imgData=await imgRes.json();
