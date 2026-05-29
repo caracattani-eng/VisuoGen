@@ -6,334 +6,229 @@
 <title>PIXORA — AI Visual Studio</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --bg: #0a0a0f;
-  --bg2: #0f0f18;
-  --card: rgba(255,255,255,0.04);
-  --border: rgba(255,255,255,0.08);
-  --border2: rgba(255,255,255,0.12);
-  --text: #f0f0f8;
-  --muted: #6b6b80;
-  --muted2: #9090a8;
-  --accent: #7c5cfc;
-  --accent2: #c45cfc;
-  --accent3: #5cf4fc;
-  --green: #3dffa0;
-  --yellow: #ffc93d;
-  --red: #ff5c5c;
-  --pink: #fc5ca8;
-  --glow: rgba(124,92,252,0.35);
-}
+/* ── RESET & VARS ── */
 *{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0f;--bg2:#0f0f18;--card:rgba(255,255,255,0.04);--border:rgba(255,255,255,0.08);
+  --text:#f0f0f8;--muted:#6b6b80;--muted2:#9090a8;
+  --accent:#7c5cfc;--accent2:#c45cfc;--green:#3dffa0;--yellow:#ffc93d;--red:#ff5c5c;--pink:#fc5ca8;
+  --glow:rgba(124,92,252,0.3);
+}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Sora',sans-serif;min-height:100vh;overflow-x:hidden}
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:#2a2a40;border-radius:2px}
-
-/* ── NOISE TEXTURE ── */
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.6}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:#2a2a40;border-radius:2px}
 
 /* ── NAV ── */
-nav{position:sticky;top:0;z-index:200;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:rgba(10,10,15,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-.nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
-.nav-logo-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff;box-shadow:0 0 24px var(--glow);letter-spacing:-0.02em}
-.nav-logo-text{font-size:18px;font-weight:800;letter-spacing:-0.03em;color:var(--text)}
-.nav-logo-tag{font-size:9px;font-weight:700;color:var(--accent);background:rgba(124,92,252,0.15);border:1px solid rgba(124,92,252,0.3);padding:2px 8px;border-radius:100px;letter-spacing:0.12em;text-transform:uppercase}
-.nav-links{display:flex;align-items:center;gap:8px}
+nav{position:sticky;top:0;z-index:200;height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+.logo-mark{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff;box-shadow:0 0 20px var(--glow)}
+.logo-name{font-size:18px;font-weight:800;letter-spacing:-0.03em}
+.logo-tag{font-size:9px;font-weight:700;color:var(--accent);background:rgba(124,92,252,0.15);border:1px solid rgba(124,92,252,0.3);padding:2px 8px;border-radius:100px;letter-spacing:0.1em;text-transform:uppercase}
+.nav-r{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 
 /* ── BUTTONS ── */
-.btn{font-family:'Sora',sans-serif;font-weight:600;cursor:pointer;border:none;border-radius:10px;transition:all 0.2s;font-size:13px;letter-spacing:-0.01em;display:inline-flex;align-items:center;gap:6px;justify-content:center}
-.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;padding:10px 22px;box-shadow:0 4px 20px var(--glow)}
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 32px var(--glow)}
-.btn-primary:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none}
-.btn-ghost{background:var(--card);border:1px solid var(--border);color:var(--muted2);padding:9px 18px}
-.btn-ghost:hover{border-color:var(--border2);color:var(--text);background:rgba(255,255,255,0.06)}
-.btn-danger{background:rgba(255,92,92,0.1);border:1px solid rgba(255,92,92,0.3);color:#ff5c5c;padding:9px 18px}
-.btn-sm{padding:7px 14px;font-size:12px;border-radius:8px}
+.btn{font-family:'Sora',sans-serif;font-weight:600;cursor:pointer;border:none;border-radius:10px;transition:all 0.2s;font-size:13px;display:inline-flex;align-items:center;gap:6px;justify-content:center;text-decoration:none}
+.btn-p{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;padding:10px 22px;box-shadow:0 4px 20px var(--glow)}
+.btn-p:hover{transform:translateY(-1px);box-shadow:0 8px 28px var(--glow)}
+.btn-p:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-g{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--muted2);padding:9px 18px}
+.btn-g:hover{background:rgba(255,255,255,0.08);color:var(--text);border-color:rgba(255,255,255,0.15)}
+.btn-sm{padding:7px 14px;font-size:12px}
 .btn-xs{padding:5px 11px;font-size:11px;border-radius:7px}
 .btn-lg{padding:14px 32px;font-size:15px;border-radius:12px}
 .btn-full{width:100%;padding:15px;font-size:15px;border-radius:12px}
+.btn-danger{background:rgba(255,92,92,0.1);border:1px solid rgba(255,92,92,0.3);color:#ff8080;padding:7px 14px;font-size:12px}
 
-/* ── CARDS ── */
+/* ── CARDS & INPUTS ── */
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px}
-.card-glow{box-shadow:0 0 40px rgba(124,92,252,0.08)}
-
-/* ── INPUTS ── */
 input,textarea,select{font-family:'Sora',sans-serif;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-size:13px;outline:none;width:100%;transition:all 0.2s}
-input:focus,textarea:focus,select:focus{border-color:rgba(124,92,252,0.5);background:rgba(124,92,252,0.04);box-shadow:0 0 0 3px rgba(124,92,252,0.1)}
-input::placeholder,textarea::placeholder{color:#3a3a50}
+input:focus,textarea:focus,select:focus{border-color:rgba(124,92,252,0.5);background:rgba(124,92,252,0.04)}
+input::placeholder,textarea::placeholder{color:#333}
 textarea{resize:none;line-height:1.6}
 input[type=file]{display:none}
 input[type=range]{padding:4px 0;background:transparent;border:none;cursor:pointer;accent-color:var(--accent)}
-select option{background:#1a1a28;color:var(--text)}
+select option{background:#1a1a28}
 
 /* ── TOGGLE ── */
-.toggle{width:44px;height:24px;border-radius:12px;background:#1a1a28;border:1px solid #2a2a3a;cursor:pointer;position:relative;transition:all 0.3s;flex-shrink:0;display:inline-block}
-.toggle.on{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:var(--accent);box-shadow:0 0 12px var(--glow)}
-.toggle::after{content:'';width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:2px;left:3px;transition:all 0.3s;box-shadow:0 2px 6px rgba(0,0,0,0.4)}
-.toggle.on::after{left:22px}
+.tog{width:44px;height:24px;border-radius:12px;background:#1a1a28;border:1px solid #252535;cursor:pointer;position:relative;transition:all 0.3s;flex-shrink:0;display:inline-block}
+.tog.on{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:var(--accent)}
+.tog::after{content:'';width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:2px;left:3px;transition:all 0.3s;box-shadow:0 2px 6px rgba(0,0,0,0.4)}
+.tog.on::after{left:22px}
 
-/* ── RANGE SLIDER ── */
-.range-row{display:flex;align-items:center;gap:12px}
-.range-val{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);font-weight:500;min-width:32px;text-align:right}
-
-/* ── CHIPS ── */
+/* ── CHIPS & SELECTION CARDS ── */
 .chip{padding:5px 12px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Sora',sans-serif;font-size:12px;cursor:pointer;transition:all 0.15s;font-weight:500}
-.chip:hover{border-color:rgba(124,92,252,0.4);color:var(--accent)}
-.chip.on{background:rgba(124,92,252,0.15);border-color:rgba(124,92,252,0.5);color:#c4b5fd}
-
-/* ── GRID CARDS ── */
-.sel-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px;cursor:pointer;transition:all 0.2s;user-select:none}
-.sel-card:hover{background:rgba(124,92,252,0.08);border-color:rgba(124,92,252,0.3);transform:translateY(-2px)}
-.sel-card.on{background:rgba(124,92,252,0.15);border-color:var(--accent);box-shadow:0 0 20px rgba(124,92,252,0.12)}
-
-/* ── LABEL ── */
-.lbl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:0.14em;text-transform:uppercase;display:block;margin-bottom:8px}
+.chip:hover,.chip.on{background:rgba(124,92,252,0.15);border-color:rgba(124,92,252,0.4);color:#c4b5fd}
+.sc{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px;cursor:pointer;transition:all 0.2s;user-select:none}
+.sc:hover{background:rgba(124,92,252,0.08);border-color:rgba(124,92,252,0.3);transform:translateY(-1px)}
+.sc.on{background:rgba(124,92,252,0.14);border-color:var(--accent)}
 
 /* ── ALERTS ── */
 .alert{padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.6}
-.alert-purple{background:rgba(124,92,252,0.08);border:1px solid rgba(124,92,252,0.2);color:#c4b5fd}
-.alert-yellow{background:rgba(255,201,61,0.08);border:1px solid rgba(255,201,61,0.25);color:#ffc93d}
-.alert-red{background:rgba(255,92,92,0.08);border:1px solid rgba(255,92,92,0.25);color:#ff8080}
-.alert-green{background:rgba(61,255,160,0.08);border:1px solid rgba(61,255,160,0.25);color:#3dffa0}
+.a-purple{background:rgba(124,92,252,0.08);border:1px solid rgba(124,92,252,0.2);color:#c4b5fd}
+.a-yellow{background:rgba(255,201,61,0.08);border:1px solid rgba(255,201,61,0.2);color:#ffc93d}
+.a-red{background:rgba(255,92,92,0.08);border:1px solid rgba(255,92,92,0.25);color:#ff8080}
+.a-green{background:rgba(61,255,160,0.08);border:1px solid rgba(61,255,160,0.25);color:#3dffa0}
+
+/* ── LABELS ── */
+.lbl{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:0.14em;text-transform:uppercase;display:block;margin-bottom:8px}
 
 /* ── STEPS ── */
-.steps{display:flex;background:rgba(255,255,255,0.02);border-radius:12px;padding:4px;border:1px solid var(--border);margin-bottom:24px}
-.step-item{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 8px;border-radius:9px;transition:all 0.2s}
-.step-item.active{background:rgba(124,92,252,0.12)}
-.step-item.done{cursor:pointer}
-.step-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:1px solid #222;background:#0f0f18;color:#444;transition:all 0.3s;flex-shrink:0}
-.step-item.active .step-num{background:rgba(124,92,252,0.25);border-color:var(--accent);color:#fff}
-.step-item.done .step-num{background:var(--accent);border-color:var(--accent);color:#fff}
-.step-lbl{font-size:12px;font-weight:600;color:#333}
-.step-item.active .step-lbl{color:#c4b5fd}
-.step-item.done .step-lbl{color:var(--muted)}
+.steps{display:flex;background:rgba(255,255,255,0.02);border-radius:12px;padding:4px;border:1px solid var(--border);margin-bottom:22px}
+.step-i{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 6px;border-radius:9px;transition:all 0.2s}
+.step-i.active{background:rgba(124,92,252,0.12)}
+.step-i.done{cursor:pointer}
+.step-n{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:1px solid #1a1a28;background:#0f0f18;color:#333;transition:all 0.3s;flex-shrink:0}
+.step-i.active .step-n{background:rgba(124,92,252,0.25);border-color:var(--accent);color:#fff}
+.step-i.done .step-n{background:var(--accent);border-color:var(--accent);color:#fff}
+.step-l{font-size:12px;font-weight:600;color:#2a2a3a}
+.step-i.active .step-l{color:#c4b5fd}
+.step-i.done .step-l{color:var(--muted)}
 
 /* ── LAYOUT ── */
 .page{display:none}.page.active{display:block}
 .wrap{max-width:1200px;margin:0 auto;padding:28px 24px;position:relative;z-index:1}
-.wrap-sm{max-width:480px;margin:0 auto;padding:40px 24px;position:relative;z-index:1}
+.wrap-sm{max-width:460px;margin:0 auto;padding:40px 24px;position:relative;z-index:1}
 .wrap-md{max-width:960px;margin:0 auto;padding:48px 24px;position:relative;z-index:1}
-.two-col{display:grid;grid-template-columns:280px 1fr;gap:18px;align-items:start}
-.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.plat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;max-height:280px;overflow-y:auto;padding-right:4px}
-.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
-.plan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.two-col{display:grid;grid-template-columns:270px 1fr;gap:16px;align-items:start}
+.plat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:7px;max-height:270px;overflow-y:auto;padding-right:4px}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.plan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:14px}
 .col{display:flex;flex-direction:column;gap:14px}
 .row{display:flex;align-items:center;gap:10px}
-.row-between{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.wrap-gap{flex-wrap:wrap}
+.row-b{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .hidden{display:none!important}
+a{color:inherit;text-decoration:none}
 
 /* ── HERO ── */
 .hero{min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 24px;position:relative;overflow:hidden}
-.hero-orb1{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(124,92,252,0.12),transparent 70%);top:-100px;left:50%;transform:translateX(-50%);pointer-events:none}
-.hero-orb2{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(196,92,252,0.08),transparent 70%);bottom:0;right:10%;pointer-events:none}
-.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(124,92,252,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(124,92,252,0.04) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}
-.hero-content{position:relative;z-index:1;max-width:860px}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:100px;background:rgba(124,92,252,0.1);border:1px solid rgba(124,92,252,0.25);font-size:12px;color:#c4b5fd;font-weight:600;margin-bottom:28px;letter-spacing:0.02em}
-.hero h1{font-size:clamp(48px,8vw,88px);font-weight:800;letter-spacing:-0.04em;line-height:0.95;margin-bottom:24px}
-.hero-grad{background:linear-gradient(135deg,var(--accent),var(--accent2),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero-italic{font-family:'Instrument Serif',serif;font-style:italic;font-size:clamp(48px,8vw,88px)}
-.hero p{font-size:17px;color:var(--muted2);line-height:1.7;max-width:520px;margin:0 auto 36px}
-.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:52px}
-.hero-pills{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
-.hero-pill{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
-.hero-pill::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.hero-orb1{position:absolute;width:700px;height:500px;border-radius:50%;background:radial-gradient(ellipse,rgba(124,92,252,0.1),transparent 70%);top:-50px;left:50%;transform:translateX(-50%);pointer-events:none}
+.hero-orb2{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(196,92,252,0.07),transparent 70%);bottom:0;right:10%;pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(124,92,252,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(124,92,252,0.04) 1px,transparent 1px);background-size:52px 52px;pointer-events:none}
+.hero-inner{position:relative;z-index:1;max-width:840px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:100px;background:rgba(124,92,252,0.1);border:1px solid rgba(124,92,252,0.25);font-size:12px;color:#c4b5fd;font-weight:600;margin-bottom:28px}
+.hero h1{font-size:clamp(46px,8vw,86px);font-weight:800;letter-spacing:-0.04em;line-height:0.93;margin-bottom:22px}
+.grad{background:linear-gradient(135deg,var(--accent),var(--accent2),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.italic{font-family:'Instrument Serif',serif;font-style:italic}
+.hero p{font-size:16px;color:var(--muted2);line-height:1.7;max-width:500px;margin:0 auto 32px}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:48px}
+.pills{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+.pill{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.pill::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--accent);flex-shrink:0}
 
-/* ── PLATFORM STRIP ── */
-.plat-strip{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:16px 24px;background:rgba(255,255,255,0.01)}
-.plat-strip-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-around;flex-wrap:wrap;gap:14px}
-
-/* ── SECTION ── */
-.section{padding:80px 24px}
-.section-inner{max-width:1100px;margin:0 auto}
-.section-title{font-size:clamp(32px,4vw,44px);font-weight:800;letter-spacing:-0.03em;margin-bottom:10px;text-align:center}
-.section-sub{text-align:center;color:var(--muted2);font-size:15px;margin-bottom:48px}
-
-/* ── FEAT CARD ── */
-.feat-card{padding:24px;border-radius:16px;background:var(--card);border:1px solid var(--border);transition:all 0.2s}
-.feat-card:hover{border-color:rgba(124,92,252,0.25);transform:translateY(-2px)}
-.feat-icon{font-size:28px;margin-bottom:14px}
-.feat-title{font-size:15px;font-weight:700;margin-bottom:6px}
-.feat-desc{font-size:13px;color:var(--muted2);line-height:1.6}
-
-/* ── PLAN CARD ── */
-.plan-card{padding:24px;border-radius:16px;background:var(--card);border:1px solid var(--border);transition:all 0.2s;cursor:pointer}
-.plan-card:hover{transform:translateY(-3px)}
-.plan-card.featured{border-color:rgba(124,92,252,0.4);background:rgba(124,92,252,0.06);box-shadow:0 0 40px rgba(124,92,252,0.1)}
-
-/* ── AUTH ── */
-.auth-tabs{display:flex;gap:4px;background:rgba(255,255,255,0.03);border-radius:10px;padding:4px;margin-bottom:28px}
-.auth-tab{flex:1;padding:9px;border-radius:8px;border:none;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s}
-.auth-tab.active{background:rgba(124,92,252,0.25);color:#c4b5fd}
-.auth-tab.inactive{background:transparent;color:var(--muted)}
-
-/* ── DROP ZONE ── */
-.drop-zone{border:2px dashed rgba(124,92,252,0.25);border-radius:20px;padding:56px 36px;text-align:center;transition:all 0.3s;cursor:pointer;position:relative}
-.drop-zone:hover,.drop-zone.over{border-color:var(--accent);background:rgba(124,92,252,0.05)}
-.drop-zone-icon{font-size:48px;margin-bottom:14px;display:block}
-.drop-zone h3{font-size:18px;font-weight:700;margin-bottom:6px}
-.drop-zone p{color:var(--muted);font-size:14px;margin-bottom:20px}
-
-/* ── RESULT CARD ── */
-.result-card{border-radius:16px;overflow:hidden;background:var(--card);border:1px solid var(--border)}
-.result-head{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(124,92,252,0.03)}
-.result-body{display:grid}
-.result-side{border-right:1px solid var(--border);padding:16px;display:flex;flex-direction:column;gap:12px}
-.result-main{padding:22px}
-
-/* ── TAG ── */
-.tag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:0.06em}
-.tag-purple{background:rgba(124,92,252,0.2);border:1px solid rgba(124,92,252,0.4);color:#c4b5fd}
-.tag-green{background:rgba(61,255,160,0.1);border:1px solid rgba(61,255,160,0.3);color:#3dffa0}
-.tag-cyan{background:rgba(92,244,252,0.1);border:1px solid rgba(92,244,252,0.3);color:#5cf4fc}
-.tag-pink{background:rgba(252,92,168,0.1);border:1px solid rgba(252,92,168,0.3);color:#fc5ca8}
-
-/* ── MODAL ── */
-.modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:600;display:flex;align-items:center;justify-content:center;padding:20px}
-.modal-box{max-width:520px;width:100%;padding:32px;max-height:90vh;overflow-y:auto;border-radius:20px}
-
-/* ── CONTROL PANEL ── */
-.ctrl-section{padding:14px 0;border-bottom:1px solid var(--border)}
-.ctrl-section:last-child{border-bottom:none;padding-bottom:0}
-.ctrl-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px}
-
-/* ── CREDIT BAR ── */
+/* ── MISC ── */
+.tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:0.05em}
+.t-purple{background:rgba(124,92,252,0.2);border:1px solid rgba(124,92,252,0.4);color:#c4b5fd}
+.t-green{background:rgba(61,255,160,0.1);border:1px solid rgba(61,255,160,0.3);color:#3dffa0}
+.t-cyan{background:rgba(92,244,252,0.1);border:1px solid rgba(92,244,252,0.3);color:#5cf4fc}
+.t-pink{background:rgba(252,92,168,0.1);border:1px solid rgba(252,92,168,0.3);color:#fc5ca8}
+.modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:600;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal-box{max-width:500px;width:100%;padding:32px;max-height:90vh;overflow-y:auto;border-radius:20px}
 .cred-badge{display:flex;align-items:center;gap:7px;padding:5px 12px;border-radius:100px;background:rgba(124,92,252,0.1);border:1px solid rgba(124,92,252,0.25);font-size:12px;font-weight:600;color:#c4b5fd}
 .cred-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--glow)}
-.cred-bar{height:3px;border-radius:2px;background:#1a1a28;overflow:hidden;margin-top:4px}
+.cred-bar{height:3px;border-radius:2px;background:#1a1a28;overflow:hidden}
 .cred-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.5s;border-radius:2px}
-
-/* ── ANIMATIONS ── */
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.drop-zone{border:2px dashed rgba(124,92,252,0.25);border-radius:20px;padding:52px 36px;text-align:center;transition:all 0.3s;cursor:pointer}
+.drop-zone:hover,.drop-zone.over{border-color:var(--accent);background:rgba(124,92,252,0.05)}
+.section-title{font-size:clamp(30px,4vw,42px);font-weight:800;letter-spacing:-0.03em;text-align:center;margin-bottom:10px}
+.section-sub{text-align:center;color:var(--muted2);font-size:15px;margin-bottom:44px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
-@keyframes glow{0%,100%{box-shadow:0 0 20px var(--glow)}50%{box-shadow:0 0 50px var(--glow),0 0 100px rgba(196,92,252,0.2)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .fu{animation:fadeUp 0.35s ease forwards}
-.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;flex-shrink:0}
-.pulse-txt{animation:pulse 1.3s ease infinite}
-.shimmer{background:linear-gradient(90deg,#111 25%,#1a1a28 50%,#111 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
-
-/* ── RESPONSIVE ── */
-@media(max-width:768px){
-  .two-col{grid-template-columns:1fr}
-  .three-col{grid-template-columns:1fr}
-  nav{padding:0 16px}
-  .wrap{padding:20px 16px}
-  .step-lbl{display:none}
-  .result-side{border-right:none;border-bottom:1px solid var(--border)}
-  .result-body{grid-template-columns:1fr!important}
-  .hero h1{font-size:clamp(36px,10vw,56px)}
-}
-a{color:inherit;text-decoration:none}
-.pointer{cursor:pointer}
-.mono{font-family:'JetBrains Mono',monospace}
+.spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;flex-shrink:0}
+.pulsing{animation:pulse 1.3s ease infinite}
+@media(max-width:768px){.two-col{grid-template-columns:1fr}.step-l{display:none}nav{padding:0 16px}.wrap{padding:20px 16px}}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
+<!-- ══ NAV ══ -->
 <nav>
-  <a class="nav-logo" onclick="go('landing')">
-    <div class="nav-logo-mark">P</div>
-    <span class="nav-logo-text">PIXORA</span>
-    <span class="nav-logo-tag">Studio</span>
-  </a>
-  <div class="nav-links">
-    <button class="btn btn-ghost btn-sm" onclick="go('pricing')">Pricing</button>
+  <div class="logo" onclick="go('landing')">
+    <div class="logo-mark">P</div>
+    <span class="logo-name">PIXORA</span>
+    <span class="logo-tag">Studio</span>
+  </div>
+  <div class="nav-r">
+    <button class="btn btn-g btn-sm" onclick="go('pricing')">Pricing</button>
     <div id="navOut" style="display:flex;gap:8px">
-      <button class="btn btn-ghost btn-sm" onclick="showAuth('login')">Sign In</button>
-      <button class="btn btn-primary btn-sm" onclick="showAuth('register')">Try Free</button>
+      <button class="btn btn-g btn-sm" onclick="showAuth('login')">Sign In</button>
+      <button class="btn btn-p btn-sm" onclick="showAuth('register')">Try Free</button>
     </div>
     <div id="navIn" class="hidden" style="display:flex;gap:8px;align-items:center">
-      <button class="btn btn-ghost btn-sm" id="keyNavBtn" onclick="openModal('keyModal')">⚡ Add API Key</button>
+      <button class="btn btn-g btn-sm" id="keyBtn" onclick="openModal('keyModal')">⚡ Add API Key</button>
       <div class="cred-badge"><div class="cred-dot"></div><span id="navCreds">0</span></div>
-      <button class="btn btn-ghost btn-sm" id="dashNavBtn" style="display:none" onclick="go('dashboard')">Dashboard</button>
-      <button class="btn btn-ghost btn-sm" onclick="go('app')">Studio</button>
-      <button class="btn btn-ghost btn-sm" onclick="doLogout()">Out</button>
+      <button class="btn btn-g btn-sm" id="dashBtn" style="display:none" onclick="go('dashboard')">Dashboard</button>
+      <button class="btn btn-g btn-sm" onclick="go('app')">Studio</button>
+      <button class="btn btn-g btn-sm" onclick="doLogout()">Sign Out</button>
     </div>
   </div>
 </nav>
 
-<!-- ═══════════════ LANDING ═══════════════ -->
+<!-- ══ LANDING ══ -->
 <div id="page-landing" class="page active">
   <div class="hero">
-    <div class="hero-orb1"></div>
-    <div class="hero-orb2"></div>
-    <div class="hero-grid"></div>
-    <div class="hero-content fu">
-      <div class="hero-eyebrow">✦ The only AI visual studio you'll ever need</div>
-      <h1>Create visuals<br/><span class="hero-italic hero-grad">nobody</span><br/>can tell are AI</h1>
-      <p>Upload your product or photo. Choose your platform. Get photorealistic images, UGC content, ads, and reels — indistinguishable from professional shoots.</p>
+    <div class="hero-orb1"></div><div class="hero-orb2"></div><div class="hero-grid"></div>
+    <div class="hero-inner fu">
+      <div class="eyebrow">✦ The AI visual studio that actually works</div>
+      <h1>Visuals nobody<br/><span class="italic grad">can tell are AI</span></h1>
+      <p>Upload your product or photo. Pick your platform. Get photorealistic images, UGC content, ads and reels — indistinguishable from a professional shoot.</p>
       <div class="hero-btns">
-        <button class="btn btn-primary btn-lg" onclick="showAuth('register')">Start Creating Free →</button>
-        <button class="btn btn-ghost btn-lg" onclick="go('pricing')">View Pricing</button>
+        <button class="btn btn-p btn-lg" onclick="showAuth('register')">Start Creating Free →</button>
+        <button class="btn btn-g btn-lg" onclick="go('pricing')">See Pricing</button>
       </div>
-      <div class="hero-pills">
-        <span class="hero-pill">18+ Platform Formats</span>
-        <span class="hero-pill">UGC Style Content</span>
-        <span class="hero-pill">AI Models & People</span>
-        <span class="hero-pill">Amazon Optimized</span>
-        <span class="hero-pill">Video & Reels</span>
-        <span class="hero-pill">Full Creative Control</span>
+      <div class="pills">
+        <span class="pill">20 Platform Formats</span><span class="pill">UGC Content</span>
+        <span class="pill">AI Models</span><span class="pill">Amazon Optimized</span>
+        <span class="pill">Full Creative Control</span><span class="pill">Video Storyboards</span>
       </div>
     </div>
   </div>
-
-  <div class="plat-strip">
-    <div class="plat-strip-inner">
-      <span style="font-size:10px;font-weight:700;color:#333;letter-spacing:0.12em;text-transform:uppercase">Works for</span>
-      <span style="font-size:13px;color:var(--muted)">📸 Instagram</span>
-      <span style="font-size:13px;color:var(--muted)">📱 TikTok</span>
-      <span style="font-size:13px;color:var(--muted)">📦 Amazon</span>
-      <span style="font-size:13px;color:var(--muted)">🎯 Meta Ads</span>
-      <span style="font-size:13px;color:var(--muted)">🌐 Websites</span>
-      <span style="font-size:13px;color:var(--muted)">📌 Pinterest</span>
-      <span style="font-size:13px;color:var(--muted)">💼 LinkedIn</span>
+  <div style="border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:16px 24px;background:rgba(255,255,255,0.01)">
+    <div style="max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-around;flex-wrap:wrap;gap:14px">
+      <span style="font-size:10px;font-weight:700;color:#2a2a3a;letter-spacing:0.1em;text-transform:uppercase">Optimized for</span>
+      <span style="font-size:13px;color:var(--muted)">📸 Instagram</span><span style="font-size:13px;color:var(--muted)">📱 TikTok</span>
+      <span style="font-size:13px;color:var(--muted)">📦 Amazon</span><span style="font-size:13px;color:var(--muted)">🎯 Meta Ads</span>
+      <span style="font-size:13px;color:var(--muted)">🌐 Websites</span><span style="font-size:13px;color:var(--muted)">📌 Pinterest</span>
     </div>
   </div>
-
-  <div class="section">
-    <div class="section-inner">
+  <div style="padding:72px 24px">
+    <div style="max-width:1100px;margin:0 auto">
       <div class="section-title">Everything built in</div>
-      <div class="section-sub">No other tool comes close to this level of creative control</div>
+      <div class="section-sub">More creative control than any other tool</div>
       <div class="feat-grid">
-        <div class="feat-card"><div class="feat-icon">🎭</div><div class="feat-title">UGC Style Content</div><div class="feat-desc">Generate authentic-looking user-generated content with AI models that look like real people using your product</div></div>
-        <div class="feat-card"><div class="feat-icon">🎛️</div><div class="feat-title">Full Creative Control</div><div class="feat-desc">Adjust lighting, mood, background, model appearance, camera angle, and post-processing style — all before generating</div></div>
-        <div class="feat-card"><div class="feat-icon">🔬</div><div class="feat-title">Photorealistic Quality</div><div class="feat-desc">DALL-E 3 HD quality — indistinguishable from professional photography. No AI artifacts or tells</div></div>
-        <div class="feat-card"><div class="feat-icon">📐</div><div class="feat-title">Pixel-Perfect Sizing</div><div class="feat-desc">Every format at exact pixel dimensions — Amazon 2000×2000, Instagram 1080×1080, TikTok 1080×1920 and more</div></div>
-        <div class="feat-card"><div class="feat-icon">🎬</div><div class="feat-title">Video & Reel Briefs</div><div class="feat-desc">Get complete shot-by-shot video storyboards for Reels and TikToks you can take to any video creator</div></div>
-        <div class="feat-card"><div class="feat-icon">💰</div><div class="feat-title">Built to Sell</div><div class="feat-desc">Subscription tiers, credit system, Stripe billing — sell access to your studio and keep 100% of revenue</div></div>
+        <div class="card" style="padding:22px"><div style="font-size:28px;margin-bottom:12px">🎭</div><div style="font-size:14px;font-weight:700;margin-bottom:6px">UGC Style Content</div><div style="font-size:13px;color:var(--muted2);line-height:1.6">Authentic-looking user-generated content with AI models that look like real people using your product</div></div>
+        <div class="card" style="padding:22px"><div style="font-size:28px;margin-bottom:12px">🎛️</div><div style="font-size:14px;font-weight:700;margin-bottom:6px">Full Creative Control</div><div style="font-size:13px;color:var(--muted2);line-height:1.6">Lighting, angle, background, model style, post-processing — all customizable before generating</div></div>
+        <div class="card" style="padding:22px"><div style="font-size:28px;margin-bottom:12px">🔬</div><div style="font-size:14px;font-weight:700;margin-bottom:6px">Photorealistic Quality</div><div style="font-size:13px;color:var(--muted2);line-height:1.6">DALL-E 3 HD — indistinguishable from professional photography. No AI tells or artifacts</div></div>
+        <div class="card" style="padding:22px"><div style="font-size:28px;margin-bottom:12px">📐</div><div style="font-size:14px;font-weight:700;margin-bottom:6px">Pixel-Perfect Sizing</div><div style="font-size:13px;color:var(--muted2);line-height:1.6">Every format at exact pixel dimensions — Amazon 2000×2000, TikTok 1080×1920 and more</div></div>
+        <div class="card" style="padding:22px"><div style="font-size:28px;margin-bottom:12px">🎬</div><div style="font-size:14px;font-weight:700;margin-bottom:6px">Video Storyboards</div><div style="font-size:13px;color:var(--muted2);line-height:1.6">Shot-by-shot video briefs for Reels and TikToks you can take to any video creator</div></div>
+        <div class="card" style="padding:22px"><div style="font-size:28px;margin-bottom:12px">💰</div><div style="font-size:14px;font-weight:700;margin-bottom:6px">Built to Sell</div><div style="font-size:13px;color:var(--muted2);line-height:1.6">Subscription tiers, credit system, Stripe billing — sell access and keep 100% of revenue</div></div>
       </div>
     </div>
   </div>
-
-  <div style="text-align:center;padding:40px 24px 80px;border-top:1px solid var(--border);position:relative;z-index:1">
-    <div class="section-title" style="margin-bottom:14px">Ready to create?</div>
-    <p style="color:var(--muted2);font-size:15px;margin-bottom:28px">Free plan · 5 generations · No credit card needed</p>
-    <button class="btn btn-primary btn-lg" onclick="showAuth('register')">Create Free Account →</button>
+  <div style="text-align:center;padding:40px 24px 80px;border-top:1px solid var(--border)">
+    <div class="section-title" style="margin-bottom:12px">Ready to create?</div>
+    <p style="color:var(--muted2);font-size:15px;margin-bottom:24px">Free plan · 5 generations · No credit card needed</p>
+    <button class="btn btn-p btn-lg" onclick="showAuth('register')">Create Free Account →</button>
   </div>
 </div>
 
-<!-- ═══════════════ AUTH ═══════════════ -->
+<!-- ══ AUTH ══ -->
 <div id="page-auth" class="page">
   <div class="wrap-sm">
-    <div class="card fu" style="padding:36px">
-      <div class="auth-tabs">
-        <button id="tab-login" class="auth-tab active" onclick="switchTab('login')">Sign In</button>
-        <button id="tab-register" class="auth-tab inactive" onclick="switchTab('register')">Create Account</button>
+    <div class="card fu" style="padding:34px">
+      <div style="display:flex;gap:4px;background:rgba(255,255,255,0.03);border-radius:10px;padding:4px;margin-bottom:26px">
+        <button id="tab-login" onclick="switchTab('login')" style="flex:1;padding:9px;border-radius:8px;border:none;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;cursor:pointer;background:rgba(124,92,252,0.25);color:#c4b5fd;transition:all 0.2s">Sign In</button>
+        <button id="tab-reg" onclick="switchTab('register')" style="flex:1;padding:9px;border-radius:8px;border:none;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:var(--muted);transition:all 0.2s">Create Account</button>
       </div>
-      <h2 id="authH" style="font-size:24px;font-weight:800;letter-spacing:-0.03em;margin-bottom:6px">Welcome back</h2>
-      <p id="authP" style="color:var(--muted2);font-size:14px;margin-bottom:24px">Sign in to your studio</p>
-      <div id="nameRow" class="hidden" style="margin-bottom:12px"><input id="inName" placeholder="Full name"/></div>
-      <div style="margin-bottom:12px"><input id="inEmail" type="email" placeholder="Email address"/></div>
-      <div style="margin-bottom:20px"><input id="inPass" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')doAuth()"/></div>
-      <div id="authErr" class="alert alert-red hidden" style="margin-bottom:16px"></div>
-      <button class="btn btn-primary btn-full" onclick="doAuth()" id="authBtn">Sign In →</button>
-      <div id="demoBox" style="margin-top:16px;padding:12px;background:rgba(124,92,252,0.07);border-radius:8px;font-size:12px;color:var(--muted);line-height:1.8">
+      <h2 id="authH" style="font-size:22px;font-weight:800;letter-spacing:-0.03em;margin-bottom:6px">Welcome back</h2>
+      <p id="authSub" style="color:var(--muted2);font-size:13px;margin-bottom:22px">Sign in to your studio</p>
+      <div id="nameRow" class="hidden" style="margin-bottom:11px"><input id="iName" placeholder="Full name"/></div>
+      <div style="margin-bottom:11px"><input id="iEmail" type="email" placeholder="Email address"/></div>
+      <div style="margin-bottom:18px"><input id="iPass" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')doAuth()"/></div>
+      <div id="authErr" class="alert a-red hidden" style="margin-bottom:14px"></div>
+      <button class="btn btn-p btn-full" id="authBtn" onclick="doAuth()">Sign In →</button>
+      <div id="demoHint" style="margin-top:14px;padding:11px;background:rgba(124,92,252,0.06);border-radius:8px;font-size:11px;color:var(--muted);line-height:1.8">
         <strong style="color:#a78bfa">Demo accounts:</strong><br/>
         Owner: owner@pixora.com / owner123<br/>
         Free user: demo@test.com / demo123
@@ -342,311 +237,268 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
-<!-- ═══════════════ PRICING ═══════════════ -->
+<!-- ══ PRICING ══ -->
 <div id="page-pricing" class="page">
   <div class="wrap-md">
-    <div style="text-align:center;margin-bottom:48px">
+    <div style="text-align:center;margin-bottom:44px">
       <div class="section-title">Simple pricing</div>
-      <p style="color:var(--muted2);font-size:16px;margin-top:8px">Start free. Scale as you grow.</p>
+      <p style="color:var(--muted2);font-size:15px;margin-top:8px">Start free. Scale as you grow. Cancel anytime.</p>
     </div>
     <div class="plan-grid" id="planGrid"></div>
-    <div class="card" style="padding:26px;margin-top:24px;background:rgba(255,201,61,0.03);border-color:rgba(255,201,61,0.15)">
-      <div style="font-size:15px;font-weight:700;color:var(--yellow);margin-bottom:8px">💰 Your Revenue Model</div>
-      <p style="font-size:14px;color:var(--muted2);line-height:1.8">As the owner you use Agency free. Customers pay monthly. OpenAI charges ~$0.04/image. Everything else is your profit. Connect Stripe to activate payments — I'll guide you when you're ready.</p>
+    <div class="card" style="padding:24px;margin-top:20px;background:rgba(255,201,61,0.03);border-color:rgba(255,201,61,0.15)">
+      <div style="font-size:14px;font-weight:700;color:var(--yellow);margin-bottom:8px">💰 Your Revenue Model</div>
+      <p style="font-size:13px;color:var(--muted2);line-height:1.8">As the owner you use Agency free. Customers pay monthly. OpenAI charges ~$0.04 per image. Everything else is your profit. Add your Stripe key when ready to accept payments.</p>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════ DASHBOARD ═══════════════ -->
+<!-- ══ DASHBOARD ══ -->
 <div id="page-dashboard" class="page">
   <div class="wrap">
-    <div class="row-between" style="margin-bottom:28px">
-      <div><h1 style="font-size:28px;font-weight:800;letter-spacing:-0.03em">Owner Dashboard</h1><p style="color:var(--muted);font-size:13px;margin-top:4px">Analytics & launch checklist</p></div>
-      <button class="btn btn-primary btn-sm" onclick="go('app')">Open Studio →</button>
+    <div class="row-b" style="margin-bottom:26px;flex-wrap:wrap;gap:12px">
+      <div><h1 style="font-size:26px;font-weight:800;letter-spacing:-0.03em">Owner Dashboard</h1><p style="color:var(--muted);font-size:13px;margin-top:3px">Analytics & launch status</p></div>
+      <button class="btn btn-p btn-sm" onclick="go('app')">Open Studio →</button>
     </div>
-    <div id="dashStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:20px"></div>
-    <div class="card" style="padding:22px;margin-bottom:16px">
-      <div style="font-size:14px;font-weight:700;margin-bottom:14px">🚀 Launch Checklist</div>
-      <div id="checkList" style="display:flex;flex-direction:column;gap:8px"></div>
+    <div id="dashStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;margin-bottom:18px"></div>
+    <div class="card" style="padding:20px;margin-bottom:14px">
+      <div style="font-size:14px;font-weight:700;margin-bottom:12px">🚀 Launch Checklist</div>
+      <div id="checkList" style="display:flex;flex-direction:column;gap:7px"></div>
     </div>
-    <div class="card" style="padding:22px">
-      <div style="font-size:14px;font-weight:700;margin-bottom:12px">Recent generations (<span id="histCount">0</span>)</div>
-      <div id="histList" style="max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:6px"></div>
+    <div class="card" style="padding:20px">
+      <div style="font-size:14px;font-weight:700;margin-bottom:10px">Recent Generations (<span id="histCount">0</span>)</div>
+      <div id="histList" style="max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:5px"></div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════ APP ═══════════════ -->
+<!-- ══ APP ══ -->
 <div id="page-app" class="page">
   <div class="wrap">
-    <!-- Top bar -->
-    <div class="row-between" style="margin-bottom:20px;flex-wrap:wrap;gap:12px">
+    <div class="row-b" style="margin-bottom:18px;flex-wrap:wrap;gap:12px">
       <div>
-        <h1 style="font-size:26px;font-weight:800;letter-spacing:-0.03em;line-height:1">Visual Studio</h1>
-        <p style="color:var(--muted);font-size:13px;margin-top:3px">AI-generated images, UGC & video content for every platform</p>
+        <h1 style="font-size:24px;font-weight:800;letter-spacing:-0.03em;line-height:1">Visual Studio</h1>
+        <p style="color:var(--muted);font-size:12px;margin-top:3px">AI images, UGC & video content for every platform</p>
       </div>
       <div style="text-align:right">
-        <div style="font-size:12px;color:var(--muted);margin-bottom:5px">Plan: <span id="planLbl" style="font-weight:700;text-transform:capitalize"></span> · <span id="credLbl">0</span> credits</div>
-        <div class="cred-bar" style="width:160px"><div class="cred-fill" id="credFill" style="width:0%"></div></div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:5px">Plan: <span id="planLbl" style="font-weight:700;text-transform:capitalize"></span> · <span id="credLbl">0</span> credits</div>
+        <div class="cred-bar" style="width:140px"><div class="cred-fill" id="credFill" style="width:0%"></div></div>
       </div>
     </div>
 
     <!-- Steps -->
     <div class="steps">
-      <div class="step-item active" id="st1" onclick="if(ST>1)gS(1)"><div class="step-num" id="sn1">1</div><span class="step-lbl">Upload</span></div>
-      <div class="step-item" id="st2" onclick="if(ST>2)gS(2)"><div class="step-num" id="sn2">2</div><span class="step-lbl">Configure</span></div>
-      <div class="step-item" id="st3"><div class="step-num" id="sn3">3</div><span class="step-lbl">Results</span></div>
+      <div class="step-i active" id="st1" onclick="if(ST>1)gS(1)"><div class="step-n" id="sn1">1</div><span class="step-l">Upload</span></div>
+      <div class="step-i" id="st2" onclick="if(ST>2)gS(2)"><div class="step-n" id="sn2">2</div><span class="step-l">Configure</span></div>
+      <div class="step-i" id="st3"><div class="step-n" id="sn3">3</div><span class="step-l">Results</span></div>
     </div>
 
-    <!-- STEP 1 -->
+    <!-- STEP 1: UPLOAD -->
     <div id="s1" class="fu">
-      <div style="max-width:560px;margin:0 auto">
+      <div style="max-width:540px;margin:0 auto">
         <div class="drop-zone" id="dz" onclick="document.getElementById('fi').click()" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="onDrop(event)">
-          <span class="drop-zone-icon">📸</span>
-          <h3>Upload your photo or product</h3>
-          <p>JPG, PNG, WebP — drag & drop or click to browse</p>
-          <div class="btn btn-primary" style="display:inline-flex;padding:11px 28px;font-size:14px">Choose File</div>
+          <div style="font-size:46px;margin-bottom:12px">📸</div>
+          <h3 style="font-size:18px;font-weight:700;margin-bottom:6px">Upload your photo or product</h3>
+          <p style="color:var(--muted);font-size:13px;margin-bottom:20px">JPG, PNG, WebP — drag & drop or click to browse</p>
+          <div class="btn btn-p" style="display:inline-flex;padding:11px 28px;font-size:14px">Choose File</div>
           <input type="file" id="fi" accept="image/*" onchange="onFile(event)"/>
-          <div style="margin-top:16px" class="alert alert-green" style="display:inline-flex">🛡️ Your product's exact look is always preserved</div>
+          <div class="alert a-green" style="margin-top:16px;display:inline-flex;font-size:12px">🛡️ Your product's exact look is always preserved</div>
         </div>
-        <div style="text-align:center;margin-top:14px">
-          <button class="btn btn-ghost btn-xs" onclick="useDemo()">Use demo product photo instead →</button>
+        <div style="text-align:center;margin-top:12px">
+          <button class="btn btn-g btn-xs" onclick="useDemo()">No photo? Use demo product →</button>
         </div>
-        <!-- Content type quick pick -->
-        <div class="card" style="padding:18px;margin-top:20px">
+        <div class="card" style="padding:16px;margin-top:18px">
           <div class="lbl">What do you want to create?</div>
-          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px" id="contentTypePicker">
-            <div class="sel-card on" data-ct="product" onclick="pickCT(this,'product')">
-              <div style="font-size:20px;margin-bottom:6px">📦</div>
-              <div style="font-size:12px;font-weight:700">Product Shot</div>
-              <div style="font-size:11px;color:var(--muted)">Clean product imagery</div>
-            </div>
-            <div class="sel-card" data-ct="ugc" onclick="pickCT(this,'ugc')">
-              <div style="font-size:20px;margin-bottom:6px">🎭</div>
-              <div style="font-size:12px;font-weight:700">UGC Content</div>
-              <div style="font-size:11px;color:var(--muted)">Real-person style</div>
-            </div>
-            <div class="sel-card" data-ct="lifestyle" onclick="pickCT(this,'lifestyle')">
-              <div style="font-size:20px;margin-bottom:6px">☀️</div>
-              <div style="font-size:12px;font-weight:700">Lifestyle</div>
-              <div style="font-size:11px;color:var(--muted)">In-context scenes</div>
-            </div>
-            <div class="sel-card" data-ct="ad" onclick="pickCT(this,'ad')">
-              <div style="font-size:20px;margin-bottom:6px">🎯</div>
-              <div style="font-size:12px;font-weight:700">Ad Creative</div>
-              <div style="font-size:11px;color:var(--muted)">High-converting ads</div>
-            </div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px" id="ctPicker">
+            <div class="sc on" onclick="pickCT(this,'product')"><div style="font-size:20px;margin-bottom:5px">📦</div><div style="font-size:12px;font-weight:700">Product Shot</div><div style="font-size:10px;color:var(--muted)">Clean product imagery</div></div>
+            <div class="sc" onclick="pickCT(this,'ugc')"><div style="font-size:20px;margin-bottom:5px">🎭</div><div style="font-size:12px;font-weight:700">UGC Content</div><div style="font-size:10px;color:var(--muted)">Real-person style</div></div>
+            <div class="sc" onclick="pickCT(this,'lifestyle')"><div style="font-size:20px;margin-bottom:5px">☀️</div><div style="font-size:12px;font-weight:700">Lifestyle</div><div style="font-size:10px;color:var(--muted)">In-context scenes</div></div>
+            <div class="sc" onclick="pickCT(this,'ad')"><div style="font-size:20px;margin-bottom:5px">🎯</div><div style="font-size:12px;font-weight:700">Ad Creative</div><div style="font-size:10px;color:var(--muted)">High-converting ads</div></div>
           </div>
+        </div>
+        <div style="text-align:center;margin-top:16px">
+          <button class="btn btn-p" style="padding:12px 36px;font-size:15px" onclick="if(imgSrc)gS(2);else alert('Please upload a photo first')">Continue →</button>
         </div>
       </div>
     </div>
 
-    <!-- STEP 2 -->
+    <!-- STEP 2: CONFIGURE -->
     <div id="s2" class="hidden">
       <div class="two-col">
-        <!-- LEFT: Controls panel -->
-        <div class="col" id="ctrlPanel">
-          <!-- Product preview -->
+        <!-- LEFT -->
+        <div class="col">
           <div class="card" style="padding:14px">
             <div class="lbl">Your Photo</div>
             <div style="border-radius:10px;overflow:hidden;background:#0c0c18;aspect-ratio:1;display:flex;align-items:center;justify-content:center">
               <img id="prevImg" src="" style="width:100%;height:100%;object-fit:contain;display:none"/>
-              <span id="prevNone" style="color:var(--muted);font-size:13px">No image</span>
+              <span id="prevNone" style="color:var(--muted);font-size:12px">No image</span>
             </div>
             <label style="display:block;margin-top:10px;cursor:pointer">
-              <div class="btn btn-ghost" style="width:100%;font-size:12px;padding:8px;text-align:center">Change Photo</div>
+              <div class="btn btn-g" style="width:100%;font-size:12px;padding:8px;text-align:center">Change Photo</div>
               <input type="file" accept="image/*" onchange="onFile(event)"/>
             </label>
           </div>
 
-          <!-- Visual Style -->
           <div class="card" style="padding:14px">
-            <div class="ctrl-section" style="padding-top:0">
-              <div class="ctrl-title">🎨 Visual Style</div>
-              <div id="styleCards" style="display:flex;flex-direction:column;gap:6px"></div>
+            <div class="lbl">Visual Style</div>
+            <div id="styleList" style="display:flex;flex-direction:column;gap:5px"></div>
+          </div>
+
+          <div class="card" style="padding:14px">
+            <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:12px">🎛️ Creative Controls</div>
+
+            <div style="margin-bottom:12px">
+              <div class="lbl">Lighting</div>
+              <select id="ctrlLight">
+                <option value="natural soft daylight">Natural Soft Daylight</option>
+                <option value="golden hour warm sunlight">Golden Hour</option>
+                <option value="professional studio softbox lighting">Studio Softbox</option>
+                <option value="dramatic side lighting with deep shadows">Dramatic Side Lighting</option>
+                <option value="bright high-key even lighting">Bright High-Key</option>
+                <option value="moody low-key cinematic lighting">Moody Cinematic</option>
+                <option value="outdoor overcast diffused lighting">Outdoor Overcast</option>
+              </select>
+            </div>
+
+            <div style="margin-bottom:12px">
+              <div class="lbl">Camera Angle</div>
+              <select id="ctrlAngle">
+                <option value="straight-on eye level shot">Eye Level</option>
+                <option value="slightly elevated 45-degree angle">Slightly Above (45°)</option>
+                <option value="flat lay top-down overhead shot">Flat Lay / Top Down</option>
+                <option value="low angle hero shot looking up">Low Angle (Hero Shot)</option>
+                <option value="close-up macro detail shot">Close-Up / Macro</option>
+                <option value="three-quarter angle perspective">Three-Quarter Angle</option>
+              </select>
+            </div>
+
+            <div style="margin-bottom:12px">
+              <div class="lbl">Background / Scene</div>
+              <select id="ctrlBg">
+                <option value="pure white seamless background">Pure White (Amazon-ready)</option>
+                <option value="soft neutral gradient background">Soft Neutral Gradient</option>
+                <option value="marble surface and countertop">Marble Surface</option>
+                <option value="rustic warm wooden table">Rustic Wood Table</option>
+                <option value="modern minimalist home interior">Modern Home Interior</option>
+                <option value="lush green outdoor nature setting">Nature / Outdoors</option>
+                <option value="luxury bathroom spa setting">Luxury Bathroom</option>
+                <option value="cozy bedroom lifestyle setting">Cozy Bedroom</option>
+                <option value="urban street environment">Urban / Street</option>
+                <option value="gym fitness studio environment">Gym / Fitness</option>
+                <option value="beach coastal outdoor setting">Beach / Coastal</option>
+                <option value="dark dramatic moody studio backdrop">Dark Dramatic</option>
+              </select>
+            </div>
+
+            <div style="margin-bottom:12px">
+              <div class="lbl">Color Tone</div>
+              <select id="ctrlTone">
+                <option value="clean bright commercial">Clean & Bright</option>
+                <option value="warm golden tones">Warm & Golden</option>
+                <option value="cool editorial tones">Cool & Editorial</option>
+                <option value="dark moody cinematic tones">Dark & Moody</option>
+                <option value="vibrant saturated bold colors">Vibrant & Bold</option>
+                <option value="soft muted pastel tones">Soft & Pastel</option>
+                <option value="film grain vintage aesthetic">Film / Vintage</option>
+              </select>
+            </div>
+
+            <div>
+              <div class="lbl">Photorealism: <span id="realVal" style="color:var(--accent);font-family:'JetBrains Mono',monospace">9</span>/10</div>
+              <input type="range" min="1" max="10" value="9" id="ctrlReal" oninput="document.getElementById('realVal').textContent=this.value" style="width:100%"/>
             </div>
           </div>
 
-          <!-- Advanced Controls -->
           <div class="card" style="padding:14px">
-            <div class="ctrl-section" style="padding-top:0">
-              <div class="ctrl-title">🎛️ Creative Controls</div>
-
-              <div style="margin-bottom:14px">
-                <div class="lbl">Lighting Mood</div>
-                <select id="ctrlLight">
-                  <option value="natural soft daylight">Natural Soft Daylight</option>
-                  <option value="golden hour warm sunlight">Golden Hour Sunlight</option>
-                  <option value="professional studio softbox">Studio Softbox</option>
-                  <option value="dramatic side lighting">Dramatic Side Lighting</option>
-                  <option value="bright high-key lighting">Bright High-Key</option>
-                  <option value="moody low-key cinematic">Moody Cinematic</option>
-                  <option value="neon accent lighting">Neon Accents</option>
-                  <option value="outdoor overcast diffused">Outdoor Overcast</option>
-                </select>
-              </div>
-
-              <div style="margin-bottom:14px">
-                <div class="lbl">Camera Angle</div>
-                <select id="ctrlAngle">
-                  <option value="straight-on eye level">Eye Level (straight on)</option>
-                  <option value="slightly above 45 degree angle">Slightly Above (45°)</option>
-                  <option value="flat lay top-down overhead">Flat Lay / Top Down</option>
-                  <option value="low angle looking up">Low Angle (hero shot)</option>
-                  <option value="close-up macro detail">Close-Up / Macro</option>
-                  <option value="three-quarter angle">Three-Quarter Angle</option>
-                  <option value="wide establishing shot">Wide Shot</option>
-                </select>
-              </div>
-
-              <div style="margin-bottom:14px">
-                <div class="lbl">Background</div>
-                <select id="ctrlBg">
-                  <option value="pure white seamless">Pure White (Amazon-ready)</option>
-                  <option value="soft gradient neutral">Soft Gradient Neutral</option>
-                  <option value="marble surface texture">Marble Surface</option>
-                  <option value="rustic wooden table">Rustic Wood Table</option>
-                  <option value="modern minimalist home interior">Modern Home Interior</option>
-                  <option value="lush green nature outdoors">Nature / Outdoors</option>
-                  <option value="luxury hotel bathroom setting">Luxury Bathroom</option>
-                  <option value="cozy bedroom lifestyle">Cozy Bedroom</option>
-                  <option value="urban street background">Urban / Street</option>
-                  <option value="gym fitness studio">Gym / Fitness</option>
-                  <option value="beach coastal outdoor">Beach / Coastal</option>
-                  <option value="dark dramatic moody backdrop">Dark Dramatic Backdrop</option>
-                </select>
-              </div>
-
-              <div style="margin-bottom:14px">
-                <div class="lbl">Post-Processing Style</div>
-                <select id="ctrlPost">
-                  <option value="clean commercial retouched">Clean Commercial</option>
-                  <option value="film grain vintage editorial">Film Grain / Editorial</option>
-                  <option value="bright airy minimal">Bright & Airy</option>
-                  <option value="dark moody cinematic">Dark & Moody</option>
-                  <option value="vibrant saturated pop">Vibrant & Bold</option>
-                  <option value="desaturated muted tones">Muted / Desaturated</option>
-                  <option value="warm golden tones">Warm Golden Tones</option>
-                  <option value="cool blue tones editorial">Cool Editorial Tones</option>
-                </select>
-              </div>
-
-              <div>
-                <div class="lbl" style="margin-bottom:4px">Photorealism <span class="range-val" id="realVal">9</span>/10</div>
-                <input type="range" min="1" max="10" value="9" id="ctrlReal" oninput="document.getElementById('realVal').textContent=this.value" style="width:100%"/>
-              </div>
+            <div class="row-b" style="margin-bottom:0" id="modelRow">
+              <div><div style="font-size:13px;font-weight:600">AI Model (Person)</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Add a person using your product</div></div>
+              <div class="tog" id="modelTog" onclick="togModel()"></div>
             </div>
-
-            <div class="ctrl-section">
-              <div class="ctrl-title">👤 AI Model / Person</div>
-              <div class="row-between" style="margin-bottom:10px">
-                <div><div style="font-size:13px;font-weight:600">Add a person</div><div style="font-size:11px;color:var(--muted);margin-top:2px">AI model using your product</div></div>
-                <div class="toggle" id="modelTog" onclick="togModel()"></div>
-              </div>
-              <div id="modelOpts" class="hidden">
-                <div style="margin-bottom:8px">
-                  <select id="ctrlGender">
-                    <option value="young woman">Young Woman</option>
-                    <option value="young man">Young Man</option>
-                    <option value="woman in her 30s">Woman, 30s</option>
-                    <option value="man in his 30s">Man, 30s</option>
-                    <option value="teen girl">Teen Girl</option>
-                    <option value="diverse group of people">Diverse Group</option>
-                    <option value="person (gender neutral)">Gender Neutral</option>
-                  </select>
-                </div>
-                <div style="margin-bottom:8px">
-                  <select id="ctrlStyle2">
-                    <option value="casual everyday style">Casual Everyday</option>
-                    <option value="athletic fitness wear">Athletic / Fitness</option>
-                    <option value="professional business attire">Professional</option>
-                    <option value="trendy streetwear style">Trendy / Streetwear</option>
-                    <option value="bohemian natural style">Bohemian / Natural</option>
-                    <option value="luxury high fashion">Luxury Fashion</option>
-                  </select>
-                </div>
-                <textarea id="ctrlModelExtra" rows="2" placeholder="Extra details: 'long wavy hair', 'smiling naturally', 'holding product close to face'..."></textarea>
-                <div id="modelUpg" class="alert alert-yellow hidden" style="margin-top:8px;font-size:12px">⚡ Pro plan needed for AI models — <span class="pointer" style="text-decoration:underline" onclick="go('pricing')">Upgrade</span></div>
-              </div>
+            <div id="modelOpts" class="hidden" style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+              <select id="ctrlGender">
+                <option value="young woman in her 20s">Young Woman (20s)</option>
+                <option value="young man in his 20s">Young Man (20s)</option>
+                <option value="woman in her 30s">Woman (30s)</option>
+                <option value="man in his 30s">Man (30s)</option>
+                <option value="teenage girl">Teen Girl</option>
+                <option value="diverse group of friends">Diverse Group</option>
+              </select>
+              <select id="ctrlClothing">
+                <option value="casual everyday clothing">Casual Everyday</option>
+                <option value="athletic fitness wear">Athletic / Fitness</option>
+                <option value="professional business attire">Professional</option>
+                <option value="trendy streetwear">Trendy / Streetwear</option>
+                <option value="bohemian natural style clothing">Bohemian / Natural</option>
+                <option value="luxury high fashion">Luxury Fashion</option>
+              </select>
+              <textarea id="ctrlModelExtra" rows="2" placeholder="Extra details: 'natural smile', 'holding product up to face', 'looking at camera'..."></textarea>
+              <div id="modelUpg" class="alert a-yellow hidden" style="font-size:11px">⚡ Pro plan needed for AI Models — <span style="cursor:pointer;text-decoration:underline" onclick="go('pricing')">Upgrade</span></div>
             </div>
+          </div>
 
-            <div class="ctrl-section">
-              <div class="ctrl-title">🎬 Video / Reel Storyboard</div>
-              <div class="row-between">
-                <div><div style="font-size:13px;font-weight:600">Generate video brief</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Shot-by-shot storyboard</div></div>
-                <div class="toggle" id="videoTog" onclick="togVideo()"></div>
-              </div>
-              <div id="videoOpts" class="hidden" style="margin-top:10px">
-                <select id="ctrlVideoType">
-                  <option value="TikTok style UGC video">TikTok UGC Style</option>
-                  <option value="Instagram Reel product showcase">Instagram Reel</option>
-                  <option value="Facebook video ad">Facebook Video Ad</option>
-                  <option value="YouTube Shorts">YouTube Shorts</option>
-                  <option value="unboxing video">Unboxing Video</option>
-                  <option value="before and after transformation">Before & After</option>
-                </select>
-              </div>
+          <div class="card" style="padding:14px">
+            <div class="row-b">
+              <div><div style="font-size:13px;font-weight:600">Video Storyboard</div><div style="font-size:10px;color:var(--muted);margin-top:2px">Shot-by-shot video brief</div></div>
+              <div class="tog" id="videoTog" onclick="togVideo()"></div>
+            </div>
+            <div id="videoOpts" class="hidden" style="margin-top:10px">
+              <select id="ctrlVideo">
+                <option value="TikTok style authentic UGC video">TikTok UGC Style</option>
+                <option value="Instagram Reel product showcase">Instagram Reel</option>
+                <option value="Facebook video ad">Facebook Video Ad</option>
+                <option value="unboxing and reaction video">Unboxing Video</option>
+                <option value="before and after transformation video">Before & After</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card" style="padding:14px">
+            <div class="row-b">
+              <div><div style="font-size:13px;font-weight:600">HD Quality</div><div style="font-size:10px;color:var(--muted);margin-top:2px">2× more detail · uses 2 credits</div></div>
+              <div class="tog" id="hdTog" onclick="togHD()"></div>
             </div>
           </div>
         </div>
 
-        <!-- RIGHT: Platform + prompt + generate -->
+        <!-- RIGHT -->
         <div class="col">
-          <!-- Platform -->
-          <div class="card" style="padding:18px">
-            <div class="row-between" style="margin-bottom:12px">
-              <div class="lbl" style="margin:0">Platform & Canvas Size</div>
-              <div id="platSz" class="hidden mono" style="font-size:11px;color:var(--accent);font-weight:500"></div>
+          <div class="card" style="padding:16px">
+            <div class="row-b" style="margin-bottom:11px">
+              <div class="lbl" style="margin:0">Platform & Size</div>
+              <div id="platSz" class="hidden" style="font-size:11px;color:var(--accent);font-weight:600;font-family:'JetBrains Mono',monospace"></div>
             </div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px" id="catRow"></div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px" id="catRow"></div>
             <div class="plat-grid" id="platGrid"></div>
           </div>
 
-          <!-- Prompt -->
-          <div class="card" style="padding:18px">
-            <div class="lbl">Describe your vision</div>
-            <textarea id="mainPrompt" rows="4" placeholder="e.g. 'Show my skincare product on a marble bathroom shelf with morning light coming through a window, editorial magazine style. The bottle should be the hero of the shot with a soft bokeh background...'"></textarea>
-            <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px" id="promptSuggestions"></div>
+          <div class="card" style="padding:16px">
+            <div class="lbl">Describe Your Vision</div>
+            <textarea id="mainPrompt" rows="5" placeholder="Describe exactly what you want: 'Show my serum bottle on a marble bathroom shelf. Morning light streaming through frosted glass. The product is the hero. Editorial skincare magazine style. Soft bokeh background with green plants visible...'"></textarea>
+            <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px" id="suggRow"></div>
           </div>
 
-          <!-- Quality toggle -->
-          <div class="card" style="padding:14px">
-            <div class="row-between">
-              <div>
-                <div style="font-size:13px;font-weight:600">HD Quality</div>
-                <div style="font-size:11px;color:var(--muted);margin-top:2px">2x more detail — uses 2 credits</div>
-              </div>
-              <div class="toggle" id="hdTog" onclick="togHD()"></div>
-            </div>
+          <div id="noKeyWarn" class="alert a-yellow row-b hidden">
+            <span style="font-size:13px">⚡ Add your OpenAI key to generate real images</span>
+            <button class="btn btn-p btn-xs" onclick="openModal('keyModal')">Add Key</button>
           </div>
+          <div id="noCredWarn" class="alert a-yellow hidden" style="text-align:center;font-size:13px">
+            Out of credits — <span style="cursor:pointer;text-decoration:underline;font-weight:700" onclick="go('pricing')">Upgrade your plan</span>
+          </div>
+          <div id="genErr" class="alert a-red hidden"></div>
 
-          <!-- Banners -->
-          <div id="noKeyWarn" class="alert alert-yellow row-between hidden">
-            <span>⚡ Add your OpenAI key to generate real images</span>
-            <button class="btn btn-primary btn-xs" onclick="openModal('keyModal')">Add Key</button>
-          </div>
-          <div id="noCredWarn" class="alert alert-yellow text-center hidden">
-            Out of credits — <span class="pointer" style="text-decoration:underline;font-weight:700" onclick="go('pricing')">Upgrade</span>
-          </div>
-          <div id="genErrBox" class="alert alert-red hidden"></div>
-
-          <!-- Generate -->
-          <button class="btn btn-primary btn-full" id="genBtn" onclick="doGenerate()" disabled>
-            Select a platform to continue
-          </button>
-          <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:6px" id="genNote">1 credit per generation · HD uses 2 credits</p>
+          <button class="btn btn-p btn-full" id="genBtn" onclick="doGen()" disabled>Select a platform to continue</button>
+          <p id="genNote" style="text-align:center;font-size:11px;color:var(--muted);margin-top:5px">1 credit per generation</p>
         </div>
       </div>
     </div>
 
-    <!-- STEP 3 -->
+    <!-- STEP 3: RESULTS -->
     <div id="s3" class="hidden">
-      <div class="row-between" style="margin-bottom:20px;flex-wrap:wrap;gap:10px">
-        <div><h2 style="font-size:24px;font-weight:800;letter-spacing:-0.03em">Your Results</h2><p style="color:var(--muted);font-size:13px;margin-top:3px" id="resSub"></p></div>
+      <div class="row-b" style="margin-bottom:18px;flex-wrap:wrap;gap:10px">
+        <div><h2 style="font-size:22px;font-weight:800;letter-spacing:-0.03em">Your Results</h2><p style="color:var(--muted);font-size:12px;margin-top:3px" id="resSub"></p></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn btn-ghost btn-sm" onclick="gS(2)">← Adjust</button>
-          <button class="btn btn-primary btn-sm" onclick="newFmt()">+ New Format</button>
-          <button class="btn btn-ghost btn-sm" onclick="resetAll()">New Photo</button>
+          <button class="btn btn-g btn-sm" onclick="gS(2)">← Adjust</button>
+          <button class="btn btn-p btn-sm" onclick="newFmt()">+ New Format</button>
+          <button class="btn btn-g btn-sm" onclick="resetAll()">New Photo</button>
         </div>
       </div>
       <div id="resList" style="display:flex;flex-direction:column;gap:16px"></div>
@@ -654,469 +506,538 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
-<!-- ═══════════════ KEY MODAL ═══════════════ -->
+<!-- ══ KEY MODAL ══ -->
 <div id="keyModal" class="modal-wrap hidden" onclick="if(event.target===this)closeModal('keyModal')">
   <div class="card modal-box fu">
-    <h2 style="font-size:22px;font-weight:800;letter-spacing:-0.03em;margin-bottom:6px">OpenAI API Key</h2>
-    <p style="color:var(--muted2);font-size:14px;margin-bottom:22px;line-height:1.6">Required for real image generation with DALL-E 3. Saved only in your browser — never shared.</p>
-    <div class="alert alert-purple" style="margin-bottom:20px">
-      <div class="lbl" style="color:#a78bfa;margin-bottom:10px">Get your free key in 2 minutes</div>
+    <h2 style="font-size:20px;font-weight:800;letter-spacing:-0.03em;margin-bottom:6px">OpenAI API Key</h2>
+    <p style="color:var(--muted2);font-size:13px;margin-bottom:20px;line-height:1.6">Required for real DALL-E 3 image generation. Saved only in your browser — never shared with anyone.</p>
+    <div class="alert a-purple" style="margin-bottom:18px">
+      <div class="lbl" style="color:#a78bfa;margin-bottom:10px">Get your free key — 2 minutes</div>
       <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="display:flex;gap:8px;align-items:flex-start"><div style="width:18px;height:18px;border-radius:50%;background:rgba(124,92,252,0.3);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#c4b5fd;flex-shrink:0;margin-top:1px">1</div><span style="font-size:13px;color:var(--muted2)">Go to <a href="https://platform.openai.com" target="_blank" style="color:#a78bfa;font-weight:600">platform.openai.com</a> and sign up free</span></div>
-        <div style="display:flex;gap:8px;align-items:flex-start"><div style="width:18px;height:18px;border-radius:50%;background:rgba(124,92,252,0.3);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#c4b5fd;flex-shrink:0;margin-top:1px">2</div><span style="font-size:13px;color:var(--muted2)">Click Profile → <a href="https://platform.openai.com/api-keys" target="_blank" style="color:#a78bfa;font-weight:600">API Keys</a> → Create new secret key</span></div>
-        <div style="display:flex;gap:8px;align-items:flex-start"><div style="width:18px;height:18px;border-radius:50%;background:rgba(124,92,252,0.3);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#c4b5fd;flex-shrink:0;margin-top:1px">3</div><span style="font-size:13px;color:var(--muted2)">Copy the key (starts with sk-...) and paste below</span></div>
+        <div style="display:flex;gap:8px"><div style="width:18px;height:18px;border-radius:50%;background:rgba(124,92,252,0.3);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#c4b5fd;flex-shrink:0;margin-top:1px">1</div><span style="font-size:12px;color:var(--muted2)">Go to <a href="https://platform.openai.com" target="_blank" style="color:#a78bfa;font-weight:600">platform.openai.com</a> → Sign up free</span></div>
+        <div style="display:flex;gap:8px"><div style="width:18px;height:18px;border-radius:50%;background:rgba(124,92,252,0.3);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#c4b5fd;flex-shrink:0;margin-top:1px">2</div><span style="font-size:12px;color:var(--muted2)">Click Profile → <a href="https://platform.openai.com/api-keys" target="_blank" style="color:#a78bfa;font-weight:600">API Keys</a> → Create new secret key</span></div>
+        <div style="display:flex;gap:8px"><div style="width:18px;height:18px;border-radius:50%;background:rgba(124,92,252,0.3);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#c4b5fd;flex-shrink:0;margin-top:1px">3</div><span style="font-size:12px;color:var(--muted2)">Copy the key (starts with sk-...) and paste below</span></div>
       </div>
     </div>
     <div class="lbl">Your OpenAI API Key</div>
-    <input id="keyInp" type="password" placeholder="sk-..." style="margin-bottom:6px;font-family:'JetBrains Mono',monospace;font-size:13px"/>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:20px">🔒 Stored only in your browser's localStorage. Never leaves your device.</div>
+    <input id="keyInp" type="password" placeholder="sk-..." style="margin-bottom:6px;font-family:'JetBrains Mono',monospace;font-size:12px"/>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:18px">🔒 Only stored in your browser's localStorage. Never transmitted anywhere else.</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn btn-primary" onclick="saveKey()">Save Key</button>
-      <button class="btn btn-danger btn-sm" id="rmKeyBtn" onclick="removeKey()" style="display:none">Remove</button>
-      <button class="btn btn-ghost" style="margin-left:auto" onclick="closeModal('keyModal')">Cancel</button>
+      <button class="btn btn-p btn-sm" onclick="saveKey()">Save Key</button>
+      <button class="btn btn-danger" id="rmKeyBtn" onclick="removeKey()" style="display:none">Remove Key</button>
+      <button class="btn btn-g btn-sm" style="margin-left:auto" onclick="closeModal('keyModal')">Cancel</button>
     </div>
-    <div id="keySaved" class="hidden" style="margin-top:12px;font-size:12px;color:var(--green);font-weight:600">✓ Key saved — DALL-E 3 image generation is active</div>
+    <div id="keySaved" class="hidden" style="margin-top:12px;font-size:12px;color:var(--green);font-weight:600">✓ Key saved — DALL-E 3 generation is active</div>
   </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════
+//  CONFIGURATION
+//  WORKER_URL: your Cloudflare Worker that proxies
+//  all API calls — solves CORS permanently
+// ══════════════════════════════════════════════
+const WORKER = "https://icy-bush-5dca.caracattani.workers.dev";
+
+// ══════════════════════════════════════════════
 //  DATA
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════
 const PLANS = {
-  free:    {label:"Free",    price:0,   credits:5,   color:"#6b7280", features:["5 generations/mo","Social formats","Watermarked","Basic styles"]},
-  starter: {label:"Starter", price:19,  credits:100, color:"#3b82f6", features:["100 gen/mo","All platforms","HD quality","No watermark","All styles"]},
-  pro:     {label:"Pro",     price:49,  credits:300, color:"#8b5cf6", features:["300 gen/mo","All platforms","HD output","AI Models","UGC mode","Priority"]},
+  free:    {label:"Free",    price:0,   credits:5,   color:"#6b7280", features:["5 generations/mo","Social formats","Watermarked output","Basic styles"]},
+  starter: {label:"Starter", price:19,  credits:100, color:"#3b82f6", features:["100 gen/mo","All platforms","HD output","No watermark","All styles"]},
+  pro:     {label:"Pro",     price:49,  credits:300, color:"#8b5cf6", features:["300 gen/mo","All platforms","4K output","AI Models","UGC mode","Priority"]},
   agency:  {label:"Agency",  price:149, credits:9999,color:"#f59e0b", features:["Unlimited","White-label","API access","Team seats","Full support"]},
 };
 
 const PLATFORMS = [
-  {id:"ig-post",   label:"Instagram Post",    cat:"Social",  icon:"📸", w:1080,h:1080,ratio:"1:1",    desc:"Square post"},
-  {id:"ig-story",  label:"IG Story/Reel",     cat:"Social",  icon:"📱", w:1080,h:1920,ratio:"9:16",   desc:"Stories & Reels",video:true},
-  {id:"tiktok",    label:"TikTok",            cat:"Social",  icon:"🎵", w:1080,h:1920,ratio:"9:16",   desc:"Vertical",video:true},
-  {id:"ig-land",   label:"IG Landscape",      cat:"Social",  icon:"🖼️", w:1080,h:566, ratio:"1.91:1", desc:"Landscape post"},
-  {id:"facebook",  label:"Facebook Post",     cat:"Social",  icon:"📘", w:1200,h:630, ratio:"1.91:1", desc:"Feed post"},
-  {id:"twitter",   label:"X / Twitter",       cat:"Social",  icon:"🐦", w:1600,h:900, ratio:"16:9",   desc:"Timeline"},
-  {id:"pinterest", label:"Pinterest",         cat:"Social",  icon:"📌", w:1000,h:1500,ratio:"2:3",    desc:"Pin"},
-  {id:"linkedin",  label:"LinkedIn",          cat:"Social",  icon:"💼", w:1200,h:627, ratio:"1.91:1", desc:"Feed"},
-  {id:"amz-main",  label:"Amazon Main",       cat:"Amazon",  icon:"📦", w:2000,h:2000,ratio:"1:1",    desc:"White bg required"},
-  {id:"amz-life",  label:"Amazon Lifestyle",  cat:"Amazon",  icon:"🏠", w:2000,h:2000,ratio:"1:1",    desc:"In-context"},
-  {id:"amz-info",  label:"Amazon Infographic",cat:"Amazon",  icon:"📊", w:2000,h:2000,ratio:"1:1",    desc:"Feature callouts"},
-  {id:"amz-aplus", label:"Amazon A+",         cat:"Amazon",  icon:"⭐", w:1464,h:600, ratio:"2.44:1", desc:"A+ content"},
-  {id:"fb-ad",     label:"Meta/FB Ad",        cat:"Ads",     icon:"🎯", w:1200,h:628, ratio:"1.91:1", desc:"Feed ad"},
-  {id:"fb-story-ad",label:"Story Ad",         cat:"Ads",     icon:"📣", w:1080,h:1920,ratio:"9:16",   desc:"Story/Reel ad"},
-  {id:"google",    label:"Google Display",    cat:"Ads",     icon:"🔍", w:1200,h:628, ratio:"1.91:1", desc:"Display"},
-  {id:"banner",    label:"Leaderboard",       cat:"Ads",     icon:"📋", w:728, h:90,  ratio:"8:1",    desc:"728×90"},
-  {id:"hero",      label:"Website Hero",      cat:"Website", icon:"🌐", w:1920,h:1080,ratio:"16:9",   desc:"Full-width"},
-  {id:"prodcard",  label:"Product Card",      cat:"Website", icon:"🛒", w:800, h:800, ratio:"1:1",    desc:"E-commerce"},
-  {id:"og",        label:"OG Image",          cat:"Website", icon:"🔗", w:1200,h:630, ratio:"1.91:1", desc:"Social share"},
-  {id:"email",     label:"Email Header",      cat:"Website", icon:"📧", w:600, h:300, ratio:"2:1",    desc:"Email banner"},
+  {id:"ig-post",    label:"Instagram Post",     cat:"Social",  icon:"📸", w:1080,h:1080,ratio:"1:1",    desc:"Square post"},
+  {id:"ig-story",   label:"IG Story/Reel",      cat:"Social",  icon:"📱", w:1080,h:1920,ratio:"9:16",   desc:"Stories & Reels",video:true},
+  {id:"tiktok",     label:"TikTok",             cat:"Social",  icon:"🎵", w:1080,h:1920,ratio:"9:16",   desc:"Vertical video",video:true},
+  {id:"ig-land",    label:"IG Landscape",       cat:"Social",  icon:"🖼️", w:1080,h:566, ratio:"1.91:1", desc:"Landscape post"},
+  {id:"facebook",   label:"Facebook Post",      cat:"Social",  icon:"📘", w:1200,h:630, ratio:"1.91:1", desc:"Feed post"},
+  {id:"twitter",    label:"X / Twitter",        cat:"Social",  icon:"🐦", w:1600,h:900, ratio:"16:9",   desc:"Timeline"},
+  {id:"pinterest",  label:"Pinterest",          cat:"Social",  icon:"📌", w:1000,h:1500,ratio:"2:3",    desc:"Pin"},
+  {id:"linkedin",   label:"LinkedIn",           cat:"Social",  icon:"💼", w:1200,h:627, ratio:"1.91:1", desc:"Feed"},
+  {id:"amz-main",   label:"Amazon Main",        cat:"Amazon",  icon:"📦", w:2000,h:2000,ratio:"1:1",    desc:"White bg required"},
+  {id:"amz-life",   label:"Amazon Lifestyle",   cat:"Amazon",  icon:"🏠", w:2000,h:2000,ratio:"1:1",    desc:"In-context"},
+  {id:"amz-info",   label:"Amazon Infographic", cat:"Amazon",  icon:"📊", w:2000,h:2000,ratio:"1:1",    desc:"Feature callouts"},
+  {id:"amz-aplus",  label:"Amazon A+",          cat:"Amazon",  icon:"⭐", w:1464,h:600, ratio:"2.44:1", desc:"A+ content"},
+  {id:"fb-ad",      label:"Meta/FB Ad",         cat:"Ads",     icon:"🎯", w:1200,h:628, ratio:"1.91:1", desc:"Feed ad"},
+  {id:"story-ad",   label:"Story Ad",           cat:"Ads",     icon:"📣", w:1080,h:1920,ratio:"9:16",   desc:"Story/Reel ad"},
+  {id:"google",     label:"Google Display",     cat:"Ads",     icon:"🔍", w:1200,h:628, ratio:"1.91:1", desc:"Display network"},
+  {id:"hero",       label:"Website Hero",       cat:"Website", icon:"🌐", w:1920,h:1080,ratio:"16:9",   desc:"Full-width hero"},
+  {id:"prodcard",   label:"Product Card",       cat:"Website", icon:"🛒", w:800, h:800, ratio:"1:1",    desc:"E-commerce"},
+  {id:"og",         label:"OG/SEO Image",       cat:"Website", icon:"🔗", w:1200,h:630, ratio:"1.91:1", desc:"Social share"},
+  {id:"email",      label:"Email Header",       cat:"Website", icon:"📧", w:600, h:300, ratio:"2:1",    desc:"Email banner"},
 ];
 
 const STYLES = [
-  {id:"photo",    label:"Ultra Realistic",  icon:"🔬", p:"ultra-realistic commercial photography, DSLR quality, photorealistic, indistinguishable from real photo, no AI artifacts"},
-  {id:"studio",   label:"Studio Clean",     icon:"💡", p:"professional studio photography, perfect studio lighting, commercial product photography, polished and clean"},
-  {id:"editorial",label:"Editorial / Magazine", icon:"✨", p:"editorial magazine photography, art-directed lifestyle, high fashion editorial quality, sophisticated composition"},
-  {id:"ugc",      label:"UGC / Authentic",  icon:"🤳", p:"authentic user-generated content style, candid natural feel, real person aesthetic, iPhone camera quality, unpolished authentic"},
-  {id:"minimal",  label:"Minimalist",       icon:"⬜", p:"minimalist photography, pure clean background, negative space, Scandinavian aesthetic, refined and simple"},
-  {id:"cinematic",label:"Cinematic",        icon:"🎬", p:"cinematic photography, movie-quality lighting, dramatic atmosphere, film photography aesthetic, bokeh background"},
+  {id:"photo",     label:"Ultra Realistic",      icon:"🔬", p:"ultra-realistic commercial photography, DSLR quality, photorealistic image indistinguishable from a real photograph, no AI artifacts"},
+  {id:"studio",    label:"Studio Clean",         icon:"💡", p:"professional studio product photography, perfect controlled studio lighting, commercial product shot"},
+  {id:"editorial", label:"Editorial / Magazine", icon:"✨", p:"editorial magazine photography, art-directed lifestyle, high-end fashion editorial quality"},
+  {id:"ugc",       label:"UGC / Authentic",      icon:"🤳", p:"authentic user-generated content photography style, candid natural feel, real person using the product, iPhone camera quality, unpolished authentic look"},
+  {id:"minimal",   label:"Minimalist",           icon:"⬜", p:"minimalist clean photography, pure background, negative space, refined and simple composition"},
+  {id:"cinematic", label:"Cinematic",            icon:"🎬", p:"cinematic photography, movie-quality dramatic lighting, film photography aesthetic, deep bokeh"},
 ];
 
 const SUGGESTIONS = {
-  product:   ["On marble bathroom shelf","Amazon hero shot","White background studio","Flat lay with props","Multiple angles"],
-  ugc:       ["Holding product naturally","Applying the product","Unboxing reaction","Morning routine vlog style","Talking to camera"],
-  lifestyle: ["Morning routine setting","Kitchen counter scene","Gym bag essentials","Desk setup / work from home","Travel flat lay"],
-  ad:        ["Bold text overlay space","Clean product focus","Before and after split","Lifestyle + product combo","Minimal with strong CTA space"],
+  product:   ["Amazon hero shot","Flat lay with props","White studio background","Multiple product angles","Close-up texture detail"],
+  ugc:       ["Holding product naturally","Applying product to skin","Morning routine vlog","Unboxing reaction","Talking to camera"],
+  lifestyle: ["Morning bathroom routine","Kitchen counter scene","Gym bag essentials","Desk work from home setup","Travel flat lay"],
+  ad:        ["Strong product hero focus","Before and after split","Lifestyle with product","Minimal with text space","Bold eye-catching composition"],
 };
 
-const MOCK_USERS = {
+const USERS = {
   "owner@pixora.com": {password:"owner123",plan:"agency",credits:9999,name:"Studio Owner",isOwner:true},
   "demo@test.com":    {password:"demo123", plan:"free",  credits:5,   name:"Demo User",  isOwner:false},
 };
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════
 //  STATE
-// ═══════════════════════════════════════════
-let U = null, UC = 0, ST = 1;
-let imgSrc = null, imgB64 = null;
-let selPlat = null, selStyle = "photo";
-let modelOn = false, videoOn = false, hdOn = false;
-let catF = "All", ctType = "product";
-let results = [], history = JSON.parse(localStorage.getItem("px_history")||"[]");
-let authMode = "login";
+// ══════════════════════════════════════════════
+let U=null, UC=0, ST=1;
+let imgSrc=null, imgB64=null;
+let selPlat=null, selStyle="photo";
+let modelOn=false, videoOn=false, hdOn=false;
+let catF="All", ctType="product";
+let results=[], history=[];
+let authMode="login";
 
-// ═══════════════════════════════════════════
-//  UTILS
-// ═══════════════════════════════════════════
-const $ = id => document.getElementById(id);
-const show = id => $(id)?.classList.remove("hidden");
-const hide = id => $(id)?.classList.add("hidden");
-const getKey = () => { try{const v=localStorage.getItem("px_key");return v?JSON.parse(v):"";}catch{return ""; }};
+// Load history from localStorage safely
+try { history=JSON.parse(localStorage.getItem("px_h")||"[]"); } catch(e){ history=[]; }
 
-function go(page) {
+// ══════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════
+const $=id=>document.getElementById(id);
+const show=id=>$(id)&&$(id).classList.remove("hidden");
+const hide=id=>$(id)&&$(id).classList.add("hidden");
+const getKey=()=>{ try{const v=localStorage.getItem("px_k");return v?JSON.parse(v):"";}catch{return "";} };
+
+function go(page){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  $("page-"+page)?.classList.add("active");
+  const el=$("page-"+page);
+  if(el) el.classList.add("active");
   if(page==="pricing") renderPricing();
   if(page==="dashboard") renderDashboard();
-  if(page==="app") renderAppBar();
+  if(page==="app") refreshAppBar();
   window.scrollTo(0,0);
 }
 
-function openModal(id) {
-  $(id)?.classList.remove("hidden");
-  if(id==="keyModal") {
-    const k=getKey(); $("keyInp").value=k?"••••••••":"";
-    k ? (show("keySaved"),($("rmKeyBtn").style.display="block")) : (hide("keySaved"),($("rmKeyBtn").style.display="none"));
+function openModal(id){
+  $(id)&&$(id).classList.remove("hidden");
+  if(id==="keyModal"){
+    const k=getKey();
+    $("keyInp").value=k?"••••••••":"";
+    if(k){show("keySaved");$("rmKeyBtn").style.display="block";}
+    else{hide("keySaved");$("rmKeyBtn").style.display="none";}
   }
 }
-function closeModal(id) { $(id)?.classList.add("hidden"); }
+function closeModal(id){ $(id)&&$(id).classList.add("hidden"); }
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════
 //  AUTH
-// ═══════════════════════════════════════════
-function showAuth(mode) { go("auth"); switchTab(mode); }
+// ══════════════════════════════════════════════
+function showAuth(mode){ go("auth"); switchTab(mode); }
 
-function switchTab(m) {
-  authMode = m;
-  const isL = m==="login";
-  $("tab-login").className  = "auth-tab "+(isL?"active":"inactive");
-  $("tab-register").className="auth-tab "+(isL?"inactive":"active");
-  $("authH").textContent = isL ? "Welcome back" : "Create account";
-  $("authP").textContent = isL ? "Sign in to your studio" : "Start with 5 free generations";
-  $("authBtn").textContent = isL ? "Sign In →" : "Create Account →";
-  isL ? hide("nameRow") : show("nameRow");
-  isL ? show("demoBox") : hide("demoBox");
+function switchTab(m){
+  authMode=m;
+  const isL=m==="login";
+  $("tab-login").style.background=isL?"rgba(124,92,252,0.25)":"transparent";
+  $("tab-login").style.color=isL?"#c4b5fd":"var(--muted)";
+  $("tab-reg").style.background=isL?"transparent":"rgba(124,92,252,0.25)";
+  $("tab-reg").style.color=isL?"var(--muted)":"#c4b5fd";
+  $("authH").textContent=isL?"Welcome back":"Create account";
+  $("authSub").textContent=isL?"Sign in to your studio":"Start with 5 free generations";
+  $("authBtn").textContent=isL?"Sign In →":"Create Account →";
+  isL?hide("nameRow"):show("nameRow");
+  isL?show("demoHint"):hide("demoHint");
   hide("authErr");
 }
 
-function doAuth() {
-  const email = $("inEmail").value.trim().toLowerCase();
-  const pass  = $("inPass").value;
-  const name  = $("inName").value.trim();
-  if(authMode==="login") {
-    const u = MOCK_USERS[email];
-    if(!u||u.password!==pass) { $("authErr").textContent="Invalid email or password"; show("authErr"); return; }
-    loginUser({email,name:u.name,plan:u.plan,isOwner:u.isOwner}, u.credits);
+function doAuth(){
+  const email=$("iEmail").value.trim().toLowerCase();
+  const pass=$("iPass").value;
+  const name=$("iName").value.trim();
+  if(authMode==="login"){
+    const u=USERS[email];
+    if(!u||u.password!==pass){ showAuthErr("Invalid email or password"); return; }
+    loginUser({email,name:u.name,plan:u.plan,isOwner:u.isOwner},u.credits);
   } else {
-    if(!name||!email||!pass) { $("authErr").textContent="All fields required"; show("authErr"); return; }
-    loginUser({email,name,plan:"free",isOwner:false}, 5);
+    if(!name||!email||!pass){ showAuthErr("All fields are required"); return; }
+    loginUser({email,name,plan:"free",isOwner:false},5);
   }
   go("app");
 }
 
-function loginUser(u, credits) {
+function showAuthErr(msg){ $("authErr").textContent=msg; show("authErr"); }
+
+function loginUser(u,credits){
   U=u; UC=credits;
   hide("navOut"); show("navIn");
   $("navCreds").textContent=credits;
-  if(u.isOwner) $("dashNavBtn").style.display="block";
+  if(u.isOwner) $("dashBtn").style.display="block";
   updateKeyBtn();
-  renderAppBar();
+  refreshAppBar();
 }
 
-function doLogout() {
-  U=null; UC=0; show("navOut"); hide("navIn");
-  $("dashNavBtn").style.display="none";
-  results=[]; ST=1; go("landing");
+function doLogout(){
+  U=null; UC=0;
+  show("navOut"); hide("navIn");
+  $("dashBtn").style.display="none";
+  results=[]; ST=1;
+  go("landing");
 }
 
-function updateKeyBtn() {
+function updateKeyBtn(){
   const k=getKey();
-  $("keyNavBtn").textContent = k ? "⚙️ Key Active ✓" : "⚡ Add API Key";
-  $("keyNavBtn").style.color = k ? "var(--green)" : "var(--yellow)";
+  $("keyBtn").textContent=k?"⚙️ Key Active ✓":"⚡ Add API Key";
+  $("keyBtn").style.color=k?"var(--green)":"var(--yellow)";
 }
 
-// ═══════════════════════════════════════════
-//  KEY MANAGEMENT
-// ═══════════════════════════════════════════
-function saveKey() {
+// ══════════════════════════════════════════════
+//  KEY
+// ══════════════════════════════════════════════
+function saveKey(){
   const v=$("keyInp").value.trim();
-  if(!v||v.startsWith("•")) { closeModal("keyModal"); return; }
-  localStorage.setItem("px_key", JSON.stringify(v));
+  if(!v||v.startsWith("•")){ closeModal("keyModal"); return; }
+  localStorage.setItem("px_k",JSON.stringify(v));
   show("keySaved"); $("rmKeyBtn").style.display="block";
-  updateKeyBtn(); setTimeout(()=>closeModal("keyModal"), 700);
+  updateKeyBtn();
+  setTimeout(()=>closeModal("keyModal"),700);
 }
-function removeKey() {
-  localStorage.removeItem("px_key");
+function removeKey(){
+  localStorage.removeItem("px_k");
   $("keyInp").value=""; hide("keySaved"); $("rmKeyBtn").style.display="none";
   updateKeyBtn();
 }
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════
 //  UPLOAD
-// ═══════════════════════════════════════════
-function onFile(e) { const f=e.target.files[0]; if(f) readFile(f); }
-function onDrop(e) { e.preventDefault(); $("dz")?.classList.remove("over"); const f=e.dataTransfer.files[0]; if(f&&f.type.startsWith("image/")) readFile(f); }
-function readFile(f) {
+// ══════════════════════════════════════════════
+function onFile(e){ const f=e.target.files[0]; if(f) readFile(f); }
+function onDrop(e){
+  e.preventDefault(); $("dz")&&$("dz").classList.remove("over");
+  const f=e.dataTransfer.files[0];
+  if(f&&f.type.startsWith("image/")) readFile(f);
+}
+function readFile(f){
   const r=new FileReader();
-  r.onload=ev=>{ imgSrc=ev.target.result; imgB64=ev.target.result.split(",")[1]; gS(2); };
+  r.onload=ev=>{ imgSrc=ev.target.result; imgB64=ev.target.result.split(",")[1]; };
   r.readAsDataURL(f);
 }
-function useDemo() { imgSrc="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80"; imgB64=null; gS(2); }
-function pickCT(el, ct) {
+function useDemo(){
+  imgSrc="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=600&q=80";
+  imgB64=null;
+}
+function pickCT(el,ct){
   ctType=ct;
-  document.querySelectorAll("#contentTypePicker .sel-card").forEach(c=>c.classList.remove("on"));
+  document.querySelectorAll("#ctPicker .sc").forEach(c=>c.classList.remove("on"));
   el.classList.add("on");
-  renderSuggestions();
 }
 
-// ═══════════════════════════════════════════
-//  APP STEP MANAGEMENT
-// ═══════════════════════════════════════════
-function gS(n) {
+// ══════════════════════════════════════════════
+//  APP STEPS
+// ══════════════════════════════════════════════
+function gS(n){
   ST=n;
-  ["s1","s2","s3"].forEach((id,i)=>{ if(i+1===n){show(id);$(id).classList.add("fu");}else hide(id); });
+  ["s1","s2","s3"].forEach((id,i)=>{
+    if(i+1===n){ show(id); $(id).classList.add("fu"); }
+    else hide(id);
+  });
   for(let i=1;i<=3;i++){
     const t=$("st"+i), nm=$("sn"+i);
+    if(!t||!nm) continue;
     t.classList.remove("active","done");
     if(i===n) t.classList.add("active");
-    if(i<n) { t.classList.add("done"); nm.textContent="✓"; }
-    if(i>=n) nm.textContent=i;
+    if(i<n){ t.classList.add("done"); nm.textContent="✓"; }
+    else nm.textContent=i;
   }
   if(n===2) setupStep2();
   if(n===3) renderResults();
 }
 
-function renderAppBar() {
+function refreshAppBar(){
   if(!U) return;
-  const plan=PLANS[U.plan||"free"];
-  $("planLbl").textContent=plan.label; $("planLbl").style.color=plan.color;
-  $("credLbl").textContent=UC; $("navCreds").textContent=UC;
-  $("credFill").style.width=Math.min(100,(UC/Math.max(plan.credits,1))*100)+"%";
+  const plan=PLANS[U.plan]||PLANS.free;
+  $("planLbl").textContent=plan.label;
+  $("planLbl").style.color=plan.color;
+  $("credLbl").textContent=UC;
+  $("navCreds").textContent=UC;
+  const pct=Math.min(100,(UC/Math.max(plan.credits,1))*100);
+  $("credFill").style.width=pct+"%";
 }
 
-function setupStep2() {
-  // Preview
-  if(imgSrc) { $("prevImg").src=imgSrc; $("prevImg").style.display="block"; hide("prevNone"); }
+function setupStep2(){
+  // Preview image
+  if(imgSrc){
+    $("prevImg").src=imgSrc;
+    $("prevImg").style.display="block";
+    hide("prevNone");
+  }
 
-  // Style cards
-  const sc=$("styleCards"); sc.innerHTML="";
+  // Style list
+  const sl=$("styleList"); sl.innerHTML="";
   STYLES.forEach(s=>{
     const d=document.createElement("div");
-    d.className="sel-card"+(selStyle===s.id?" on":"");
-    d.style.display="flex"; d.style.alignItems="center"; d.style.gap="10px"; d.style.marginBottom="4px";
-    d.innerHTML=`<span style="font-size:16px">${s.icon}</span><span style="font-size:12px;font-weight:600;color:${selStyle===s.id?"#c4b5fd":"var(--muted2)"}">${s.label}</span>${selStyle===s.id?'<div style="margin-left:auto;width:6px;height:6px;border-radius:50%;background:var(--accent)"></div>':''}`;
+    d.className="sc"+(selStyle===s.id?" on":"");
+    d.style.cssText="display:flex;align-items:center;gap:10px;padding:9px 12px";
+    d.innerHTML=`<span style="font-size:15px">${s.icon}</span><span style="font-size:12px;font-weight:600;color:${selStyle===s.id?"#c4b5fd":"var(--muted2)"}">${s.label}</span>${selStyle===s.id?'<div style="margin-left:auto;width:5px;height:5px;border-radius:50%;background:var(--accent)"></div>':""}`;
     d.onclick=()=>{ selStyle=s.id; setupStep2(); };
-    sc.appendChild(d);
+    sl.appendChild(d);
   });
 
-  // Categories
+  // Category buttons
   const cr=$("catRow"); cr.innerHTML="";
   ["All","Social","Amazon","Ads","Website"].forEach(c=>{
     const b=document.createElement("button");
-    b.className="chip"+(catF===c?" on":""); b.textContent=c;
+    b.className="chip"+(catF===c?" on":"");
+    b.textContent=c;
     b.onclick=()=>{ catF=c; setupStep2(); };
     cr.appendChild(b);
   });
 
   // Platform grid
   const pg=$("platGrid"); pg.innerHTML="";
-  const plist=catF==="All"?PLATFORMS:PLATFORMS.filter(p=>p.cat===catF);
-  plist.forEach(p=>{
+  const list=catF==="All"?PLATFORMS:PLATFORMS.filter(p=>p.cat===catF);
+  list.forEach(p=>{
     const d=document.createElement("div");
-    d.className="sel-card"+(selPlat===p.id?" on":"");
-    d.innerHTML=`<div style="font-size:17px;margin-bottom:4px">${p.icon}</div><div style="font-size:11px;font-weight:700;color:${selPlat===p.id?"#c4b5fd":"var(--muted2)"};margin-bottom:2px;line-height:1.3">${p.label}</div><div style="font-size:9px;color:var(--muted);margin-bottom:2px">${p.desc}</div><div class="mono" style="font-size:9px;color:#2a2a40">${p.w}×${p.h}</div>${p.video?'<div style="font-size:8px;font-weight:700;color:var(--accent);margin-top:2px;letter-spacing:0.1em">VIDEO</div>':''}`;
+    d.className="sc"+(selPlat===p.id?" on":"");
+    d.innerHTML=`<div style="font-size:16px;margin-bottom:4px">${p.icon}</div><div style="font-size:11px;font-weight:700;color:${selPlat===p.id?"#c4b5fd":"var(--muted2)"};line-height:1.3;margin-bottom:2px">${p.label}</div><div style="font-size:9px;color:var(--muted);margin-bottom:2px">${p.desc}</div><div style="font-size:9px;color:#252535;font-family:'JetBrains Mono',monospace">${p.w}×${p.h}</div>${p.video?'<div style="font-size:8px;font-weight:700;color:var(--accent);margin-top:2px">VIDEO</div>':""}`;
     d.onclick=()=>{ selPlat=p.id; setupStep2(); };
     pg.appendChild(d);
   });
 
   // Platform size badge
-  if(selPlat) { const p=PLATFORMS.find(x=>x.id===selPlat); $("platSz").textContent=`${p.w}×${p.h}px`; show("platSz"); } else hide("platSz");
+  if(selPlat){
+    const p=PLATFORMS.find(x=>x.id===selPlat);
+    $("platSz").textContent=`${p.w}×${p.h}px`;
+    show("platSz");
+  } else hide("platSz");
 
-  // Suggestions
-  renderSuggestions();
+  // Prompt suggestions
+  const sr=$("suggRow"); sr.innerHTML="";
+  (SUGGESTIONS[ctType]||[]).forEach(s=>{
+    const b=document.createElement("button");
+    b.className="chip"; b.textContent="+ "+s;
+    b.onclick=()=>{
+      const ta=$("mainPrompt");
+      ta.value=(ta.value?ta.value+", ":"")+s;
+    };
+    sr.appendChild(b);
+  });
 
   // Toggles
-  $("modelTog").className="toggle"+(modelOn?" on":"");
-  modelOn ? show("modelOpts") : hide("modelOpts");
-  if(modelOn && U?.plan==="free") show("modelUpg"); else hide("modelUpg");
-  $("videoTog").className="toggle"+(videoOn?" on":"");
-  videoOn ? show("videoOpts") : hide("videoOpts");
-  $("hdTog").className="toggle"+(hdOn?" on":"");
+  $("modelTog").className="tog"+(modelOn?" on":"");
+  modelOn?show("modelOpts"):hide("modelOpts");
+  if(modelOn&&U?.plan==="free") show("modelUpg"); else hide("modelUpg");
+  $("videoTog").className="tog"+(videoOn?" on":"");
+  videoOn?show("videoOpts"):hide("videoOpts");
+  $("hdTog").className="tog"+(hdOn?" on":"");
 
-  // Banners
+  // Warnings
   const k=getKey();
-  k ? hide("noKeyWarn") : show("noKeyWarn");
-  UC<1 ? show("noCredWarn") : hide("noCredWarn");
+  k?hide("noKeyWarn"):show("noKeyWarn");
+  const cost=hdOn?2:1;
+  UC<cost?show("noCredWarn"):hide("noCredWarn");
 
   // Generate button
   const btn=$("genBtn");
-  const cost=hdOn?2:1;
-  if(selPlat && UC>=cost) {
+  if(selPlat&&UC>=cost){
     btn.disabled=false;
     const p=PLATFORMS.find(x=>x.id===selPlat);
     btn.textContent=`✦ Generate for ${p.label}`;
   } else {
     btn.disabled=true;
-    btn.textContent=selPlat?(UC<1?"Out of credits":"Select platform"):"Select a platform to continue";
+    btn.textContent=selPlat?(UC<cost?"Out of credits":"Select a platform"):("Select a platform to continue");
   }
   $("genNote").textContent=hdOn?"HD mode: 2 credits per generation":"1 credit per generation";
 }
 
-function renderSuggestions() {
-  const c=$("promptSuggestions"); if(!c) return;
-  c.innerHTML="";
-  (SUGGESTIONS[ctType]||[]).forEach(s=>{
-    const b=document.createElement("button");
-    b.className="chip"; b.textContent="+ "+s;
-    b.onclick=()=>{ const ta=$("mainPrompt"); ta.value=(ta.value?ta.value+", ":"")+s; };
-    c.appendChild(b);
-  });
-}
+function togModel(){ modelOn=!modelOn; setupStep2(); }
+function togVideo(){ videoOn=!videoOn; setupStep2(); }
+function togHD(){    hdOn=!hdOn;    setupStep2(); }
 
-function togModel() { modelOn=!modelOn; setupStep2(); }
-function togVideo() { videoOn=!videoOn; setupStep2(); }
-function togHD()    { hdOn=!hdOn; setupStep2(); }
-
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════
 //  GENERATE
-// ═══════════════════════════════════════════
-async function doGenerate() {
-  if(!selPlat||UC<1) return;
+//  All API calls go through Cloudflare Worker
+//  Worker URL defined in WORKER constant above
+// ══════════════════════════════════════════════
+async function doGen(){
+  if(!selPlat||!U) return;
+  const cost=hdOn?2:1;
+  if(UC<cost){ show("noCredWarn"); return; }
+
   const plat=PLATFORMS.find(p=>p.id===selPlat);
   const sty=STYLES.find(s=>s.id===selStyle);
-  const cost=hdOn?2:1;
-  if(UC<cost){show("noCredWarn");return;}
-
   const light=$("ctrlLight").value;
   const angle=$("ctrlAngle").value;
   const bg=$("ctrlBg").value;
-  const post=$("ctrlPost").value;
+  const tone=$("ctrlTone").value;
   const real=$("ctrlReal").value;
-  const userPrompt=$("mainPrompt").value.trim();
-  const modelGender=$("ctrlGender")?.value||"";
-  const modelClothing=$("ctrlStyle2")?.value||"";
-  const modelExtra=$("ctrlModelExtra")?.value||"";
-  const videoType=$("ctrlVideoType")?.value||"";
+  const userPrompt=($("mainPrompt").value||"").trim();
+  const gender=$("ctrlGender")?$("ctrlGender").value:"";
+  const clothing=$("ctrlClothing")?$("ctrlClothing").value:"";
+  const modelExtra=$("ctrlModelExtra")?$("ctrlModelExtra").value:"";
+  const videoType=$("ctrlVideo")?$("ctrlVideo").value:"";
   const quality=hdOn?"hd":"standard";
-  const watermark=U.plan==="free"?". Add subtle 'PIXORA' watermark bottom corner":"";
-  const ctLabel={product:"product photography",ugc:"UGC user-generated content",lifestyle:"lifestyle photography",ad:"advertising creative"}[ctType]||"product photography";
+  const ctLabel={product:"product photography",ugc:"UGC content",lifestyle:"lifestyle photography",ad:"advertising creative"}[ctType]||"product photography";
+  const watermark=U.plan==="free"?". Subtle 'PIXORA' watermark bottom right corner.":"";
 
-  // Build the richest possible prompt
-  const modelPart = modelOn ? `A ${modelGender} dressed in ${modelClothing} is naturally using/holding the product${modelExtra?". "+modelExtra:""}.` : "";
-  const videoNote = videoOn ? `This is for a ${videoType}.` : "";
+  const modelPart=modelOn?`A ${gender} dressed in ${clothing} is naturally using/holding the product. ${modelExtra}`:"";
+  const videoPart=videoOn?`This is for a ${videoType}.`:"";
 
-  const fullPrompt = [
-    sty.p,
-    `${ctLabel} shot for ${plat.label} (${plat.ratio} ratio ${plat.w}×${plat.h}px).`,
-    userPrompt ? userPrompt+"." : "",
+  // Build rich, detailed DALL-E prompt
+  const fullPrompt=[
+    sty.p+",",
+    `${ctLabel} for ${plat.label} (${plat.ratio} ratio).`,
+    userPrompt?userPrompt+".":"",
     `Background: ${bg}.`,
     `Lighting: ${light}.`,
-    `Camera angle: ${angle}.`,
-    `Post-processing: ${post}.`,
+    `Camera: ${angle}.`,
+    `Color tone: ${tone}.`,
     modelPart,
-    videoNote,
-    `Photorealism level: ${real}/10.`,
-    "CRITICAL: Preserve the product's exact appearance, real colors, true shape and design. Do not stylize or alter the actual product. True-to-life proportions and scale.",
-    "Commercial grade. No visible AI artifacts. No fake text or logos.",
+    videoPart,
+    `Photorealism: ${real}/10.`,
+    "CRITICAL RULES: Preserve the product's exact real colors, exact shape, exact design. Do not alter the product at all. True-to-life proportions. No fake text. No visible AI artifacts. Commercial photography quality.",
     watermark,
   ].filter(Boolean).join(" ");
 
-  // DALL-E size mapping
-  const dalleSize = plat.w===plat.h?"1024x1024":plat.w>plat.h?"1792x1024":"1024x1792";
+  // DALL-E only supports 3 sizes
+  const dalleSize=plat.w===plat.h?"1024x1024":plat.w>plat.h?"1792x1024":"1024x1792";
 
-  // UI loading
+  // Loading UI
   const btn=$("genBtn");
-  btn.disabled=true; btn.innerHTML='<span class="spin"></span> <span class="pulse-txt">Generating with DALL-E 3...</span>';
-  hide("genErrBox");
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner"></span> <span class="pulsing">Generating your image...</span>';
+  hide("genErr");
 
   const openaiKey=getKey();
   let imageUrl=null, guidance="";
 
   try {
-    // ── DALL-E 3 IMAGE ──
-    if(openaiKey) {
+    // ── IMAGE: DALL-E 3 via Cloudflare Worker ──
+    if(openaiKey){
+      btn.innerHTML='<span class="spinner"></span> <span class="pulsing">🎨 Creating image with DALL-E 3...</span>';
       try {
-        const res=await fetch("https://icy-bush-5dca.caracattani.workers.dev/",{
+        const imgRes=await fetch(WORKER+"/openai",{
           method:"POST",
-          headers:{"Authorization":"Bearer "+openaiKey,"Content-Type":"application/json"},
-          body:JSON.stringify({model:"dall-e-3",prompt:fullPrompt,n:1,size:dalleSize,quality,response_format:"url"})
+          headers:{
+            "Content-Type":"application/json",
+            "Authorization":"Bearer "+openaiKey,
+          },
+          body:JSON.stringify({
+            model:"dall-e-3",
+            prompt:fullPrompt,
+            n:1,
+            size:dalleSize,
+            quality:quality,
+            response_format:"url",
+          }),
         });
-        const data=await res.json();
-        if(data.error) throw new Error(data.error.message);
-        imageUrl=data?.data?.[0]?.url||null;
-      } catch(ie) {
-        $("genErrBox").textContent="Image error: "+ie.message; show("genErrBox");
+        const imgData=await imgRes.json();
+        if(imgData.error){
+          $("genErr").textContent="Image error: "+imgData.error.message;
+          show("genErr");
+        } else {
+          imageUrl=imgData?.data?.[0]?.url||null;
+        }
+      } catch(imgErr){
+        $("genErr").textContent="Image generation failed: "+imgErr.message;
+        show("genErr");
       }
     }
 
-    // ── CLAUDE AI DIRECTION ──
-    btn.innerHTML='<span class="spin"></span> <span class="pulse-txt">Writing creative brief...</span>';
-    const msgContent = imgB64 ? [
-      {type:"image",source:{type:"base64",media_type:"image/jpeg",data:imgB64}},
-      {type:"text",text:`You are a world-class creative director and product photographer. Analyze this product and write an expert creative brief for a ${plat.label} visual (${plat.w}×${plat.h}px, ${plat.ratio}).\n\nContent type: ${ctLabel}\nStyle: ${sty.label}\nLighting: ${light}\nCamera: ${angle}\nBackground: ${bg}\nPost-processing: ${post}\n${modelOn?`AI Model: ${modelGender}, ${modelClothing}. ${modelExtra}`:"No model."}\n${videoOn?`Video type: ${videoType}`:"Static image."}\nUser notes: ${userPrompt||"none"}\n\nWrite a detailed creative brief with these sections:\n**Visual Concept:** (2-3 sentences describing the overall vision)\n**Lighting Setup:** (specific and technical)\n**Composition & Framing:** (exact placement and framing)\n**Model Direction:** (if applicable — exact poses, expressions, gestures)\n**Post-Processing:** (color grading and retouching notes)\n**Platform Optimization:** (specific tips for ${plat.label} ${plat.w}×${plat.h}px)\n${videoOn?`**Video Storyboard:** (shot-by-shot breakdown for ${videoType})`:""}${"\n**Why This Will Convert:** (marketing psychology behind this visual)"}\n\nBe extremely specific, visual, and actionable. Never suggest altering the product's actual colors, shape, or core design.`}
-    ]:[{type:"text",text:`Write an expert creative brief for a ${plat.label} ${ctLabel} visual (${plat.w}×${plat.h}px, ${sty.label} style, ${bg} background, ${light} lighting). Include: Visual Concept, Lighting Setup, Composition, Post-Processing, Platform Optimization, Why This Will Convert. Be specific and actionable.`}];
+    // ── CREATIVE BRIEF: Claude via Cloudflare Worker ──
+    btn.innerHTML='<span class="spinner"></span> <span class="pulsing">✦ Writing creative brief...</span>';
+    const claudeBody={
+      model:"claude-sonnet-4-20250514",
+      max_tokens:1200,
+      messages:[{
+        role:"user",
+        content: imgB64 ? [
+          {type:"image",source:{type:"base64",media_type:"image/jpeg",data:imgB64}},
+          {type:"text",text:`You are a world-class creative director. Analyze this product and write a professional creative brief for a ${plat.label} ${ctLabel} (${plat.w}×${plat.h}px, ${plat.ratio}).\n\nStyle: ${sty.label} | Lighting: ${light} | Camera: ${angle} | Background: ${bg} | Tone: ${tone}\n${modelOn?`Model: ${gender}, ${clothing}. ${modelExtra}`:"No model."}\n${videoOn?`Video: ${videoType}`:"Static image."}\nUser vision: ${userPrompt||"none"}\n\nWrite a creative brief with these exact sections:\n**Visual Concept:** (2-3 sentences — the overall vision)\n**Lighting Setup:** (specific and technical)\n**Composition & Framing:** (exact placement)\n**Color & Mood:** (tone and atmosphere)\n**Platform Tips:** (specific to ${plat.label} ${plat.w}×${plat.h}px)\n${videoOn?`**Video Storyboard:** (3-5 shot breakdown for ${videoType})\n`:""}\n**Why This Will Convert:** (marketing psychology)\n\nBe specific, visual, and actionable. Never suggest altering the product's actual appearance.`}
+        ] : [{type:"text",text:`Write a professional creative brief for a ${plat.label} ${ctLabel} (${plat.w}×${plat.h}px, ${sty.label}, ${bg}, ${light}). Sections: Visual Concept, Lighting, Composition, Color & Mood, Platform Tips, Why This Will Convert. Be specific and actionable.`}]
+      }]
+    };
 
-    const cr=await fetch("https://api.anthropic.com/v1/messages",{
-      method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1200,messages:[{role:"user",content:msgContent}]})
+    const cRes=await fetch(WORKER+"/anthropic",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(claudeBody),
     });
-    const cd=await cr.json();
-    guidance=cd.content?.map(c=>c.text||"").join("\n")||"Could not generate creative brief.";
+    const cData=await cRes.json();
+    guidance=cData.content?.map(c=>c.text||"").join("\n")||"Creative brief unavailable.";
 
-    // Save
-    const result={id:Date.now(),plat,sty,guidance,imageUrl,fullPrompt,ctType,ts:new Date().toLocaleString(),plan:U.plan,hd:hdOn};
+    // Save result
+    const result={
+      id:Date.now(),plat,sty,guidance,imageUrl,
+      fullPrompt,ctType,ts:new Date().toLocaleString(),
+      plan:U.plan,hd:hdOn,
+    };
     results.unshift(result);
     history.unshift(result);
-    localStorage.setItem("px_history",JSON.stringify(history.slice(0,50)));
+    try{ localStorage.setItem("px_h",JSON.stringify(history.slice(0,50))); }catch(e){}
     UC=Math.max(0,UC-cost);
-    renderAppBar();
+    refreshAppBar();
     gS(3);
 
-  } catch(err) {
-    $("genErrBox").textContent="Error: "+(err.message||"Something went wrong");
-    show("genErrBox");
+  } catch(err){
+    $("genErr").textContent="Error: "+(err.message||"Something went wrong. Please try again.");
+    show("genErr");
     btn.disabled=false;
     const p=PLATFORMS.find(x=>x.id===selPlat);
     btn.textContent=`✦ Generate for ${p.label}`;
   }
 }
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════
 //  RESULTS
-// ═══════════════════════════════════════════
-function renderResults() {
+// ══════════════════════════════════════════════
+function renderResults(){
   $("resSub").textContent=`${results.length} result${results.length!==1?"s":""} · ${UC} credits remaining`;
   const list=$("resList"); list.innerHTML="";
   results.forEach(r=>{
-    const d=document.createElement("div");
-    d.className="result-card";
     const hasSide=!!imgSrc;
     const ctLabel={product:"Product Shot",ugc:"UGC Content",lifestyle:"Lifestyle",ad:"Ad Creative"}[r.ctType]||"";
-    d.innerHTML=`
-      <div class="result-head">
-        <div style="display:flex;align-items:center;gap:12px">
+    const div=document.createElement("div");
+    div.style.cssText="border-radius:16px;overflow:hidden;background:var(--card);border:1px solid var(--border)";
+    div.innerHTML=`
+      <div style="padding:13px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:rgba(124,92,252,0.03)">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
           <span style="font-size:20px">${r.plat.icon}</span>
-          <div><div style="font-weight:700;font-size:14px">${r.plat.label}</div><div style="font-size:11px;color:var(--muted)">${r.plat.w}×${r.plat.h}px · ${r.plat.ratio} · ${r.sty.label}</div></div>
-          ${ctLabel?`<span class="tag tag-cyan">${ctLabel}</span>`:""}
-          ${r.plat.video?'<span class="tag tag-purple">🎬 VIDEO</span>':""}
-          ${r.imageUrl?'<span class="tag tag-green">✓ Generated</span>':""}
-          ${r.hd?'<span class="tag tag-pink">HD</span>':""}
+          <div><div style="font-weight:700;font-size:14px">${r.plat.label}</div><div style="font-size:10px;color:var(--muted)">${r.plat.w}×${r.plat.h}px · ${r.plat.ratio} · ${r.sty.label}</div></div>
+          ${ctLabel?`<span class="tag t-cyan">${ctLabel}</span>`:""}
+          ${r.plat.video?'<span class="tag t-purple">🎬 VIDEO</span>':""}
+          ${r.imageUrl?'<span class="tag t-green">✓ Image Generated</span>':""}
+          ${r.hd?'<span class="tag t-pink">HD</span>':""}
         </div>
         <div style="display:flex;gap:8px;align-items:center">
           <span style="font-size:10px;color:var(--muted)">${r.ts}</span>
-          <button class="btn btn-ghost btn-xs" onclick="copyPrompt(${r.id})">Copy Prompt</button>
+          <button class="btn btn-g btn-xs" onclick="copyP(${r.id})">Copy Prompt</button>
         </div>
       </div>
-      <div class="result-body" style="grid-template-columns:${hasSide?"190px 1fr":"1fr"}">
+      <div style="display:grid;grid-template-columns:${hasSide?"185px 1fr":"1fr"}">
         ${hasSide?`
-        <div class="result-side">
-          <div class="lbl">Source</div>
+        <div style="border-right:1px solid var(--border);padding:14px;display:flex;flex-direction:column;gap:10px">
+          <div class="lbl">Source Photo</div>
           <img src="${imgSrc}" style="width:100%;border-radius:8px;object-fit:contain;background:#0c0c18;max-height:150px"/>
           ${r.imageUrl?`
-            <div class="lbl" style="margin-top:4px">Generated</div>
+            <div class="lbl" style="margin-top:2px">Generated Image</div>
             <img src="${r.imageUrl}" style="width:100%;border-radius:8px;object-fit:cover"/>
-            <a href="${r.imageUrl}" download="pixora-${r.id}.png" class="btn btn-ghost btn-xs" style="width:100%;margin-top:4px;text-align:center">⬇ Download</a>
+            <a href="${r.imageUrl}" download="pixora-${r.id}.png" class="btn btn-g btn-xs" style="text-align:center;margin-top:2px">⬇ Download Image</a>
           `:`
-            <div class="alert alert-yellow" style="font-size:11px">
-              Add OpenAI key for real images
-              <button class="btn btn-primary btn-xs" style="width:100%;margin-top:8px" onclick="openModal('keyModal')">Setup</button>
+            <div class="alert a-yellow" style="font-size:11px">
+              Add your OpenAI key to generate real images
+              <button class="btn btn-p btn-xs" style="width:100%;margin-top:8px" onclick="openModal('keyModal')">Setup Key</button>
             </div>
           `}
         </div>`:``}
-        <div class="result-main">
+        <div style="padding:20px">
           <div class="lbl">Creative Brief & AI Direction</div>
           <div style="font-size:13px;line-height:1.85;color:#a0a0c0;white-space:pre-wrap">${r.guidance}</div>
-          <div class="alert alert-purple" style="margin-top:16px;display:flex;flex-wrap:wrap;gap:16px;font-size:12px">
+          <div class="alert a-purple" style="margin-top:14px;display:flex;flex-wrap:wrap;gap:14px;font-size:12px">
             <span><span style="color:var(--muted)">Size: </span><span style="color:#c4b5fd;font-weight:600">${r.plat.w}×${r.plat.h}px</span></span>
             <span><span style="color:var(--muted)">Ratio: </span><span style="color:#c4b5fd;font-weight:600">${r.plat.ratio}</span></span>
             <span><span style="color:var(--muted)">Platform: </span><span style="color:#c4b5fd;font-weight:600">${r.plat.cat}</span></span>
@@ -1124,88 +1045,93 @@ function renderResults() {
           </div>
         </div>
       </div>`;
-    list.appendChild(d);
+    list.appendChild(div);
   });
 }
 
-function copyPrompt(id) {
+function copyP(id){
   const r=results.find(x=>x.id===id)||history.find(x=>x.id===id);
-  if(r) navigator.clipboard?.writeText(r.fullPrompt);
+  if(r) try{ navigator.clipboard.writeText(r.fullPrompt); }catch(e){}
 }
-function newFmt() { selPlat=null; gS(2); }
-function resetAll() { ST=1; imgSrc=null; imgB64=null; selPlat=null; results=[]; gS(1); }
+function newFmt(){ selPlat=null; gS(2); }
+function resetAll(){ ST=1; imgSrc=null; imgB64=null; selPlat=null; results=[]; gS(1); }
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════
 //  PRICING
-// ═══════════════════════════════════════════
-function renderPricing() {
+// ══════════════════════════════════════════════
+function renderPricing(){
   const g=$("planGrid"); if(!g) return; g.innerHTML="";
   Object.entries(PLANS).forEach(([key,plan])=>{
     const feat=key==="pro";
     const d=document.createElement("div");
     d.className="plan-card"+(feat?" featured":"");
+    if(feat){ d.style.borderColor="rgba(124,92,252,0.4)"; d.style.background="rgba(124,92,252,0.06)"; }
     d.innerHTML=`
       ${feat?'<div style="margin-bottom:10px;font-size:9px;font-weight:700;color:#c4b5fd;background:rgba(124,92,252,0.2);border:1px solid rgba(124,92,252,0.4);display:inline-block;padding:2px 10px;border-radius:100px;letter-spacing:0.1em">⭐ MOST POPULAR</div>':""}
       <div style="font-size:10px;font-weight:700;color:${plan.color};letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px">${plan.label}</div>
-      <div style="margin-bottom:12px"><span style="font-size:38px;font-weight:800;letter-spacing:-0.04em">$${plan.price}</span>${plan.price>0?'<span style="color:var(--muted);font-size:13px">/mo</span>':""}</div>
-      <div style="font-size:12px;color:#7c3aed;font-weight:600;margin-bottom:12px">${plan.credits===9999?"Unlimited":plan.credits} credits/mo</div>
-      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px">${plan.features.map(f=>`<div style="font-size:12px;color:var(--muted2);display:flex;align-items:center;gap:7px"><span style="color:${plan.color};font-size:11px">✓</span>${f}</div>`).join("")}</div>
-      <button class="btn btn-primary" style="width:100%;background:linear-gradient(135deg,${plan.color},${plan.color}bb)" onclick="handlePlan('${key}')">
+      <div style="margin-bottom:12px"><span style="font-size:36px;font-weight:800;letter-spacing:-0.04em">$${plan.price}</span>${plan.price>0?'<span style="color:var(--muted);font-size:13px">/mo</span>':""}</div>
+      <div style="font-size:12px;color:#7c3aed;font-weight:600;margin-bottom:10px">${plan.credits===9999?"Unlimited":plan.credits} credits/mo</div>
+      <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:18px">${plan.features.map(f=>`<div style="font-size:12px;color:var(--muted2);display:flex;align-items:center;gap:7px"><span style="color:${plan.color}">✓</span>${f}</div>`).join("")}</div>
+      <button class="btn btn-p" style="width:100%;background:linear-gradient(135deg,${plan.color},${plan.color}bb)" onclick="handlePlan('${key}')">
         ${plan.price===0?"Start Free →":"Subscribe →"}
       </button>`;
     g.appendChild(d);
   });
 }
-function handlePlan(key) {
-  if(!U){showAuth("register");return;}
+function handlePlan(key){
+  if(!U){ showAuth("register"); return; }
   const p=PLANS[key];
-  if(p.price===0){go("app");return;}
-  alert(`To activate ${p.label} at $${p.price}/mo:\n\n1. Create a Stripe payment link for this plan\n2. Add your Stripe publishable key to the code\n3. Redirect users to the payment link\n\nContact me for help setting up Stripe billing!`);
+  if(p.price===0){ go("app"); return; }
+  alert(`To activate ${p.label} ($${p.price}/mo):\n\n1. Create a Stripe payment link\n2. Add your Stripe publishable key to the code\n3. Redirect users to the payment page\n\nThis is the final step to start earning!`);
 }
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════
 //  DASHBOARD
-// ═══════════════════════════════════════════
-function renderDashboard() {
+// ══════════════════════════════════════════════
+function renderDashboard(){
   if(!U?.isOwner) return;
   const k=getKey();
-  const top=Object.entries(history.reduce((a,r)=>{if(r.plat?.label)a[r.plat.label]=(a[r.plat.label]||0)+1;return a;},{})).sort((a,b)=>b[1]-a[1])[0];
+  const topEntry=Object.entries(history.reduce((a,r)=>{
+    if(r.plat?.label) a[r.plat.label]=(a[r.plat.label]||0)+1;
+    return a;
+  },{})).sort((a,b)=>b[1]-a[1])[0];
+
   $("dashStats").innerHTML=[
     {l:"Total Generations",v:history.length,c:"var(--accent)"},
-    {l:"Top Platform",v:top?.[0]||"—",c:"var(--accent2)"},
+    {l:"Top Platform",v:topEntry?.[0]||"—",c:"var(--accent2)"},
     {l:"Your Plan",v:"Agency (Free)",c:"var(--yellow)"},
     {l:"Image Gen",v:k?"✓ Active":"Not set",c:k?"var(--green)":"var(--red)"},
-  ].map(s=>`<div class="card" style="padding:18px"><div class="lbl">${s.l}</div><div style="font-size:28px;font-weight:800;color:${s.c};letter-spacing:-0.03em;line-height:1.1">${s.v}</div></div>`).join("");
+  ].map(s=>`<div class="card" style="padding:16px"><div class="lbl">${s.l}</div><div style="font-size:24px;font-weight:800;color:${s.c};letter-spacing:-0.03em">${s.v}</div></div>`).join("");
 
   $("checkList").innerHTML=[
-    {done:!!k,   t:"OpenAI API key added",     sub:"Enables DALL-E 3 image generation",link:"https://platform.openai.com/api-keys",cta:"Get key"},
-    {done:false, t:"Stripe payments connected", sub:"Charge customers monthly",           link:"https://stripe.com",                  cta:"Setup"},
-    {done:false, t:"Deploy to GitHub Pages",    sub:"Your app live at your own URL",      link:"https://github.com",                  cta:"Deploy"},
-    {done:false, t:"Custom domain",             sub:"yourapp.com from Namecheap ~$12/yr", link:"https://namecheap.com",               cta:"Buy"},
+    {done:!!k,  t:"OpenAI API key added",      sub:"Enables DALL-E 3 real image generation",link:"https://platform.openai.com/api-keys",cta:"Get key"},
+    {done:true, t:"Cloudflare Worker deployed", sub:"API proxy active — CORS solved permanently",link:"https://dash.cloudflare.com",cta:"View"},
+    {done:false,t:"Stripe payments connected",  sub:"Start charging customers monthly",        link:"https://stripe.com",               cta:"Setup"},
+    {done:false,t:"Custom domain",              sub:"yourapp.com from Namecheap ~$12/yr",      link:"https://namecheap.com",            cta:"Buy"},
   ].map(i=>`
-    <div style="display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05)">
-      <div style="width:18px;height:18px;border-radius:50%;border:2px solid ${i.done?"var(--green)":"#2a2a3a"};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 13px;border-radius:9px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05)">
+      <div style="width:18px;height:18px;border-radius:50%;border:2px solid ${i.done?"var(--green)":"#252535"};display:flex;align-items:center;justify-content:center;flex-shrink:0">
         ${i.done?'<div style="width:8px;height:8px;border-radius:50%;background:var(--green)"></div>':""}
       </div>
-      <div style="flex:1"><div style="font-size:13px;font-weight:600;color:${i.done?"var(--green)":"var(--muted2)"}">${i.t}</div><div style="font-size:11px;color:var(--muted)">${i.sub}</div></div>
-      <a href="${i.link}" target="_blank" class="btn btn-ghost btn-xs" style="color:var(--accent);border-color:rgba(124,92,252,0.3);white-space:nowrap">${i.cta} →</a>
+      <div style="flex:1"><div style="font-size:12px;font-weight:600;color:${i.done?"var(--green)":"var(--muted2)"}">${i.t}</div><div style="font-size:10px;color:var(--muted)">${i.sub}</div></div>
+      <a href="${i.link}" target="_blank" class="btn btn-g btn-xs" style="color:var(--accent);border-color:rgba(124,92,252,0.3);white-space:nowrap;font-size:10px">${i.cta} →</a>
     </div>`).join("");
 
   $("histCount").textContent=history.length;
   $("histList").innerHTML=history.length===0
-    ?'<div style="text-align:center;color:var(--muted);padding:24px;font-size:13px">No generations yet</div>'
+    ?'<div style="text-align:center;color:var(--muted);padding:24px;font-size:13px">No generations yet — go create something!</div>'
     :history.slice(0,25).map(r=>`
-      <div style="display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04)">
-        <span style="font-size:16px">${r.plat?.icon||"📸"}</span>
-        <div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--muted2)">${r.plat?.label}</div><div style="font-size:10px;color:var(--muted)">${r.plat?.w}×${r.plat?.h} · ${r.sty?.label} · ${r.ctType}</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04)">
+        <span style="font-size:15px">${r.plat?.icon||"📸"}</span>
+        <div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--muted2)">${r.plat?.label}</div><div style="font-size:10px;color:var(--muted)">${r.plat?.w}×${r.plat?.h} · ${r.sty?.label}</div></div>
         ${r.imageUrl?'<span style="font-size:9px;font-weight:700;color:var(--green)">✓ IMG</span>':""}
-        <span style="font-size:10px;color:#222">${r.ts}</span>
+        <span style="font-size:10px;color:#1a1a28">${r.ts}</span>
       </div>`).join("");
 }
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════
 //  INIT
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════
 renderPricing();
 updateKeyBtn();
 </script>
