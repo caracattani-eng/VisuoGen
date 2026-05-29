@@ -537,7 +537,7 @@ a{color:inherit;text-decoration:none}
 //  WORKER_URL: your Cloudflare Worker that proxies
 //  all API calls — solves CORS permanently
 // ══════════════════════════════════════════════
-const WORKER = "https://icy-bush-5dca.caracattani.workers.dev";
+const WORKER = "https://ancient-mud-ee7a.caracattani.workers.dev";
 
 // ══════════════════════════════════════════════
 //  DATA
@@ -961,14 +961,21 @@ async function doGen(){
           }),
         });
         const imgData=await imgRes.json();
+        // Show full response for debugging
+        console.log("DALL-E response:", JSON.stringify(imgData));
         if(imgData.error){
-          $("genErr").textContent="Image error: "+imgData.error.message;
+          $("genErr").textContent="Image error: "+imgData.error.message+" (code: "+imgData.error.code+")";
           show("genErr");
+        } else if(imgData.data && imgData.data[0] && imgData.data[0].url){
+          imageUrl=imgData.data[0].url;
+        } else if(imgData.data && imgData.data[0] && imgData.data[0].b64_json){
+          imageUrl="data:image/png;base64,"+imgData.data[0].b64_json;
         } else {
-          imageUrl=imgData?.data?.[0]?.url||null;
+          $("genErr").textContent="No image returned. Full response: "+JSON.stringify(imgData).slice(0,300);
+          show("genErr");
         }
       } catch(imgErr){
-        $("genErr").textContent="Image generation failed: "+imgErr.message;
+        $("genErr").textContent="Network error: "+imgErr.message+". Worker URL: "+WORKER;
         show("genErr");
       }
     }
