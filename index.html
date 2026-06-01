@@ -949,30 +949,13 @@ async function doGen(){
     if(openaiKey){
       btn.innerHTML='<span class="spinner"></span> <span class="pulsing">🎨 Creating image with DALL-E 3...</span>';
       try {
-        // Use image edit endpoint if user uploaded a photo, otherwise generate from scratch
+        // Generate image using gpt-image-1
         let imgRes, imgData;
-        if(imgB64){
-          // Convert base64 to blob for multipart form
-          const byteArr = Uint8Array.from(atob(imgB64), c => c.charCodeAt(0));
-          const imgBlob = new Blob([byteArr], {type:"image/png"});
-          const formData = new FormData();
-          formData.append("model", "gpt-image-1");
-          formData.append("prompt", fullPrompt);
-          formData.append("n", "1");
-          formData.append("size", dalleSize);
-          formData.append("image[]", imgBlob, "product.png");
-          imgRes = await fetch(WORKER+"/openai-edit", {
-            method:"POST",
-            headers:{"Authorization":"Bearer "+openaiKey},
-            body: formData,
-          });
-        } else {
-          imgRes = await fetch(WORKER+"/openai",{
-            method:"POST",
-            headers:{"Content-Type":"application/json","Authorization":"Bearer "+openaiKey},
-            body:JSON.stringify({model:"gpt-image-1",prompt:fullPrompt,n:1,size:dalleSize,quality:"auto"}),
-          });
-        }
+        imgRes = await fetch(WORKER+"/openai",{
+          method:"POST",
+          headers:{"Content-Type":"application/json","Authorization":"Bearer "+openaiKey},
+          body:JSON.stringify({model:"gpt-image-1",prompt:fullPrompt,n:1,size:dalleSize,quality:"auto"}),
+        });
         imgData = await imgRes.json();
         if(imgData.error){
           $("genErr").textContent="Image error: "+imgData.error.message;
