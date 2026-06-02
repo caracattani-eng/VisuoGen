@@ -928,7 +928,7 @@ async function doGen(){
     modelPart,
     videoPart,
     `Photorealism: ${real}/10.`,
-    "CRITICAL RULES: Preserve the product's exact real colors, exact shape, exact design. Do not alter the product at all. True-to-life proportions. No fake text. No visible AI artifacts. Commercial photography quality.",
+    "CRITICAL: This is the EXACT product that must appear in the image unchanged. Do NOT alter the product's shape, color, design, labels, or appearance in ANY way. Only change the background, lighting, and environment around it. The product must look identical to the uploaded photo.",
     watermark,
   ].filter(Boolean).join(" ");
 
