@@ -540,7 +540,7 @@ a{color:inherit;text-decoration:none}
 //  WORKER_URL: your Cloudflare Worker that proxies
 //  all API calls — solves CORS permanently
 // ══════════════════════════════════════════════
-const WORKER = "https://ancient-mud-ee7a.caracattani.workers.dev";
+const SERVER = window.location.origin; // Railway serves both frontend and backend
 
 // ══════════════════════════════════════════════
 //  DATA
@@ -951,11 +951,23 @@ async function doGen(){
       try {
         // Generate image using gpt-image-1
         let imgRes, imgData;
-        imgRes = await fetch(WORKER+"/openai",{
-          method:"POST",
-          headers:{"Content-Type":"application/json","Authorization":"Bearer "+openaiKey},
-          body:JSON.stringify({model:"gpt-image-1",prompt:fullPrompt,n:1,size:dalleSize,quality:"auto"}),
-        });
+        // If user uploaded image — use edit endpoint to preserve their product
+        if(imgB64){
+          const formData = new FormData();
+          const byteArr = Uint8Array.from(atob(imgB64), c => c.charCodeAt(0));
+          const blob = new Blob([byteArr], {type:"image/png"});
+          formData.append("image", blob, "product.png");
+          formData.append("prompt", fullPrompt);
+          formData.append("size", dalleSize);
+          formData.append("openaiKey", openaiKey);
+          imgRes = await fetch(SERVER+"/api/edit", {method:"POST", body:formData});
+        } else {
+          imgRes = await fetch(SERVER+"/api/generate", {
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({prompt:fullPrompt, size:dalleSize, quality:"auto", openaiKey}),
+          });
+        }
         imgData = await imgRes.json();
         if(imgData.error){
           $("genErr").textContent="Image error: "+imgData.error.message;
