@@ -972,6 +972,7 @@ async function doGen(){
         // Generate image using gpt-image-1
         let imgRes, imgData;
         // If user uploaded image — use Stability AI to preserve exact product appearance
+        console.log("imgB64 present:", !!imgB64, "stabilityKey:", !!getStabilityKey(), "openaiKey:", !!openaiKey);
         if(imgB64){
           const stabilityKey = getStabilityKey();
           if(stabilityKey){
@@ -988,15 +989,23 @@ async function doGen(){
             const stabData = await imgRes.json();
             if(stabData.imageData){
               imageUrl = stabData.imageData;
-            } else if(stabData.error){
-              // Fall back to OpenAI edit
+            } else {
+              // Stability failed — fall back to OpenAI edit
+              console.log("Stability error:", JSON.stringify(stabData).slice(0,200));
               const formData2 = new FormData();
-              formData2.append("image", blob, "product.png");
+              const byteArr2 = Uint8Array.from(atob(imgB64), c => c.charCodeAt(0));
+              const blob2 = new Blob([byteArr2], {type:"image/png"});
+              formData2.append("image", blob2, "product.png");
               formData2.append("prompt", fullPrompt);
               formData2.append("size", dalleSize);
               formData2.append("openaiKey", openaiKey);
               imgRes = await fetch(SERVER+"/api/edit", {method:"POST", body:formData2});
               imgData = await imgRes.json();
+              if(imgData && imgData.data && imgData.data[0]){
+                const d = imgData.data[0];
+                if(d.url) imageUrl = d.url;
+                else if(d.b64_json) imageUrl = "data:image/png;base64,"+d.b64_json;
+              }
             }
           } else {
             // No stability key — use OpenAI edit
@@ -1031,8 +1040,9 @@ async function doGen(){
           show("genErr");
         }
       } catch(imgErr){
-        $("genErr").textContent="Network error: "+imgErr.message+". Worker URL: "+WORKER;
+        $("genErr").textContent="Error: "+imgErr.message;
         show("genErr");
+        console.error("Generation error:", imgErr);
       }
     }
 
