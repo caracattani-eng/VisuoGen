@@ -530,7 +530,16 @@ a{color:inherit;text-decoration:none}
       <button class="btn btn-danger" id="rmKeyBtn" onclick="removeKey()" style="display:none">Remove Key</button>
       <button class="btn btn-g btn-sm" style="margin-left:auto" onclick="closeModal('keyModal')">Cancel</button>
     </div>
-    <div id="keySaved" class="hidden" style="margin-top:12px;font-size:12px;color:var(--green);font-weight:600">✓ Key saved — DALL-E 3 generation is active</div>
+    <hr style="border-color:var(--border);margin:20px 0"/>
+    <div style="font-size:14px;font-weight:700;margin-bottom:6px">Stability AI Key <span style="font-size:11px;color:var(--muted);font-weight:400">(recommended — preserves your exact product)</span></div>
+    <p style="color:var(--muted2);font-size:12px;margin-bottom:12px;line-height:1.6">Get a free key at <a href="https://platform.stability.ai" target="_blank" style="color:#a78bfa">platform.stability.ai</a> — gives you 25 free images/day and keeps your product label, colors and design perfectly intact.</p>
+    <input id="stabInp" type="password" placeholder="sk-..." style="margin-bottom:6px;font-family:'JetBrains Mono',monospace;font-size:12px"/>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="btn btn-p btn-sm" onclick="saveStabKey()">Save Stability Key</button>
+      <button class="btn btn-danger" id="rmStabBtn" onclick="removeStabKey()" style="display:none">Remove</button>
+    </div>
+    <div id="stabSaved" class="hidden" style="margin-top:8px;font-size:12px;color:var(--green);font-weight:600">✓ Stability key saved — your product will be preserved perfectly</div>
+    <div id="keySaved" class="hidden" style="margin-top:12px;font-size:12px;color:var(--green);font-weight:600">✓ OpenAI key saved — image generation active</div>
   </div>
 </div>
 
@@ -713,6 +722,17 @@ function removeKey(){
   localStorage.removeItem("px_k");
   $("keyInp").value=""; hide("keySaved"); $("rmKeyBtn").style.display="none";
   updateKeyBtn();
+}
+function saveStabKey(){
+  const v=$("stabInp").value.trim();
+  if(!v||v.startsWith("•")) return;
+  localStorage.setItem("px_stab",JSON.stringify(v));
+  show("stabSaved"); $("rmStabBtn").style.display="block";
+  $("stabInp").value="••••••••";
+}
+function removeStabKey(){
+  localStorage.removeItem("px_stab");
+  $("stabInp").value=""; hide("stabSaved"); $("rmStabBtn").style.display="none";
 }
 
 // ══════════════════════════════════════════════
@@ -951,24 +971,53 @@ async function doGen(){
       try {
         // Generate image using gpt-image-1
         let imgRes, imgData;
-        // If user uploaded image — use edit endpoint to preserve their product
+        // If user uploaded image — use Stability AI to preserve exact product appearance
         if(imgB64){
-          const formData = new FormData();
-          const byteArr = Uint8Array.from(atob(imgB64), c => c.charCodeAt(0));
-          const blob = new Blob([byteArr], {type:"image/png"});
-          formData.append("image", blob, "product.png");
-          formData.append("prompt", fullPrompt);
-          formData.append("size", dalleSize);
-          formData.append("openaiKey", openaiKey);
-          imgRes = await fetch(SERVER+"/api/edit", {method:"POST", body:formData});
+          const stabilityKey = getStabilityKey();
+          if(stabilityKey){
+            // Use Stability AI image-to-image — best product preservation
+            btn.innerHTML='<span class="spinner"></span> <span class="pulsing">🎨 Placing your product in scene...</span>';
+            const formData = new FormData();
+            const byteArr = Uint8Array.from(atob(imgB64), c => c.charCodeAt(0));
+            const blob = new Blob([byteArr], {type:"image/png"});
+            formData.append("image", blob, "product.png");
+            formData.append("prompt", fullPrompt);
+            formData.append("stabilityKey", stabilityKey);
+            formData.append("strength", "0.65");
+            imgRes = await fetch(SERVER+"/api/stability", {method:"POST", body:formData});
+            const stabData = await imgRes.json();
+            if(stabData.imageData){
+              imageUrl = stabData.imageData;
+            } else if(stabData.error){
+              // Fall back to OpenAI edit
+              const formData2 = new FormData();
+              formData2.append("image", blob, "product.png");
+              formData2.append("prompt", fullPrompt);
+              formData2.append("size", dalleSize);
+              formData2.append("openaiKey", openaiKey);
+              imgRes = await fetch(SERVER+"/api/edit", {method:"POST", body:formData2});
+              imgData = await imgRes.json();
+            }
+          } else {
+            // No stability key — use OpenAI edit
+            const formData = new FormData();
+            const byteArr = Uint8Array.from(atob(imgB64), c => c.charCodeAt(0));
+            const blob = new Blob([byteArr], {type:"image/png"});
+            formData.append("image", blob, "product.png");
+            formData.append("prompt", fullPrompt);
+            formData.append("size", dalleSize);
+            formData.append("openaiKey", openaiKey);
+            imgRes = await fetch(SERVER+"/api/edit", {method:"POST", body:formData});
+            imgData = await imgRes.json();
+          }
         } else {
           imgRes = await fetch(SERVER+"/api/generate", {
             method:"POST",
             headers:{"Content-Type":"application/json"},
             body:JSON.stringify({prompt:fullPrompt, size:dalleSize, quality:"auto", openaiKey}),
           });
+          imgData = await imgRes.json();
         }
-        imgData = await imgRes.json();
         if(imgData.error){
           $("genErr").textContent="Image error: "+imgData.error.message;
           show("genErr");
