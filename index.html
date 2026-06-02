@@ -986,7 +986,9 @@ async function doGen(){
             formData.append("stabilityKey", stabilityKey);
             formData.append("strength", "0.65");
             imgRes = await fetch(SERVER+"/api/stability", {method:"POST", body:formData});
+            console.log("Stability status:", imgRes.status);
             const stabData = await imgRes.json();
+            console.log("Stability response:", JSON.stringify(stabData).slice(0,300));
             if(stabData.imageData){
               imageUrl = stabData.imageData;
             } else {
